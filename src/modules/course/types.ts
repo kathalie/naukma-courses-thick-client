@@ -7,7 +7,7 @@ export interface ICourse {
   facultyName: string;  // Назва факультету
   departmentName: string; // Назва кафедри
   level: EducationLevel;
-  year: 1 | 2 | 3 | 4;
+  year: number;
   seasons: CourseSeason[];
   creditsAmount?: number;
   hoursAmount?: number;
