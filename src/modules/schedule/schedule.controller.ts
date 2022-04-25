@@ -1,9 +1,9 @@
 import { Controller } from '@nestjs/common';
-// import { ScheduleService } from './schedule.service';
+import { ScheduleService } from './schedule.service';
 
 @Controller('schedule')
 export class ScheduleController {
   constructor(
-    protected readonly service: unknown,
+    protected readonly service: ScheduleService,
   ) {}
 }
