@@ -3,7 +3,5 @@ import { ScheduleService } from './schedule.service';
 
 @Controller('schedule')
 export class ScheduleController {
-  constructor(
-    protected readonly service: ScheduleService,
-  ) {}
+  constructor(protected readonly service: ScheduleService) {}
 }
