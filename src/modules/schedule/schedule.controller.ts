@@ -1,13 +1,6 @@
-import {
-    BadRequestException,
-    Controller,
-    Get,
-    InternalServerErrorException,
-    NotFoundException,
-    Param
-} from '@nestjs/common';
+import {Controller, Get, InternalServerErrorException, NotFoundException, Param, ParseIntPipe} from '@nestjs/common';
 import {ScheduleService} from "./schedule.service";
-import {IScheduleItem, IScheduleItemShort} from "./types";
+import {IScheduleItem} from "./types";
 
 @Controller('schedule')
 export class ScheduleController {
@@ -16,27 +9,23 @@ export class ScheduleController {
     ) {
     }
 
-// /schedule/<year>/<season>
     @Get(':year/:season')
-    public async getScheduleInfo(@Param('year') year: number,
+    public async getScheduleInfo(@Param('year', ParseIntPipe) year: number,
                                  @Param('season') season: string): Promise<IScheduleItem[]> {
         let seasonNumber = 0;
 
-        if(season=='autumn'){
-            seasonNumber=1;
-        }else if(season == 'spring'){
-            seasonNumber=2;
-        }else if(season == 'summer'){
-            seasonNumber=3;
+        if (season == 'autumn') {
+            seasonNumber = 1;
+        } else if (season == 'spring') {
+            seasonNumber = 2;
+        } else if (season == 'summer') {
+            seasonNumber = 3;
         }
         return this.service.getSheduleInfo(year, seasonNumber).catch(err => {
-            const errorCode = err.response.status;
+            const errorCode = err?.response?.status;
             if (errorCode == 404) {
-                if (isNaN(year)) {
-                    throw new BadRequestException('Format of input parameter(s) is not right.');
-                } else {
-                    throw new NotFoundException('Schedule not found.');
-                }
+                throw new NotFoundException('Schedule not found.');
+
             } else {
                 throw new InternalServerErrorException('Something went wrong');
             }

@@ -4,8 +4,6 @@ import cheerio from "cheerio";
 import {IScheduleItem} from "./types";
 import {CourseSeason, EducationLevel} from "../../common/types";
 
-// const pretty = require("pretty");
-
 @Injectable()
 export class ScheduleService {
 
@@ -15,7 +13,7 @@ export class ScheduleService {
     }
 
 // Async function which scrapes the data
-    public async scrapeData(url: string): Promise<IScheduleItem[]> {
+    private async scrapeData(url: string): Promise<IScheduleItem[]> {
         const {data} = await axios.get(url);
 
         const $ = cheerio.load(data);

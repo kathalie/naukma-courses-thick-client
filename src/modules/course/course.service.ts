@@ -4,8 +4,6 @@ import cheerio from "cheerio";
 import {ICourse} from "./types";
 import {CourseSeason, EducationLevel} from "../../common/types";
 
-// const pretty = require("pretty");
-
 @Injectable()
 export class CourseService {
 
@@ -14,7 +12,7 @@ export class CourseService {
     }
 
 // Async function which scrapes the data
-    public async scrapeData(url: string): Promise<ICourse> {
+    private async scrapeData(url: string): Promise<ICourse> {
         const {data} = await axios.get(url);
 
         const $ = cheerio.load(data);
