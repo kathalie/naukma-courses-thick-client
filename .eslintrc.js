@@ -14,11 +14,7 @@ module.exports = {
     {
       files: ['*.ts'],
       parser: '@typescript-eslint/parser',
-      extends: [
-        'eslint:recommended',
-        'plugin:@typescript-eslint/recommended',
-        'prettier',
-      ],
+      extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
       plugins: ['prettier'],
       rules: {
         'prettier/prettier': 'warn',

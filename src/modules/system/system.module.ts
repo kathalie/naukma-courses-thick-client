@@ -6,5 +6,4 @@ import { SystemController } from './system.controller';
   controllers: [SystemController],
   providers: [],
 })
-export class SystemModule {
-}
+export class SystemModule {}

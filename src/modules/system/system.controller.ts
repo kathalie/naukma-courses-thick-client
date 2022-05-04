@@ -5,9 +5,6 @@ import { SystemDebugDTO } from './types';
 @ApiTags('System')
 @Controller('system')
 export class SystemController {
-  constructor() {
-  }
-
   @Get('info')
   public info(): unknown {
     return {
@@ -29,7 +26,7 @@ export class SystemController {
   public debug(
     @Param('code', new ParseIntPipe()) code: number,
     @Query('arg') arg: string,
-    @Body() body: SystemDebugDTO,
+    @Body() body: SystemDebugDTO
   ): unknown {
     return {
       code,
