@@ -5,5 +5,10 @@ module.exports = {
   username: 'root',
   password: 'root',
   database: 'edu_backend_courses',
+  charset: 'utf8mb4',
   entities: ['dist/**/*.entity{.ts,.js}'],
+  migrations: ['dist/migrations/**/*.js'],
+  cli: {
+    migrationsDir: 'src/migrations',
+  },
 };
