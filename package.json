@@ -17,9 +17,12 @@
     "@nestjs/core": "8.2.6",
     "@nestjs/platform-express": "8.2.6",
     "@nestjs/swagger": "5.2.1",
+    "@nestjs/typeorm": "8.0.3",
+    "mysql2": "2.3.3",
     "reflect-metadata": "0.1.13",
     "rxjs": "7.5.2",
-    "swagger-ui-express": "4.3.0"
+    "swagger-ui-express": "4.3.0",
+    "typeorm": "0.2.45"
   },
   "devDependencies": {
     "@types/node": "17.0.15",
