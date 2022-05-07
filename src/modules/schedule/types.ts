@@ -9,6 +9,6 @@ export interface IScheduleItem extends IScheduleItemShort {
   facultyName: string;
   specialityName: string;
   level: EducationLevel;
-  year: 1 | 2 | 3 | 4;
+  year: number;
   season: CourseSeason;
 }
