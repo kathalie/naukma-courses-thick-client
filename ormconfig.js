@@ -1,14 +1,25 @@
-module.exports = {
+let localConfig = {};
+
+try {
+  localConfig = require('./ormconfig.local');
+} catch (err) {
+  console.warn('No local ormconfig provided!');
+}
+
+const defaultConfig = {
   type: 'mysql',
-  host: '127.0.0.1',
-  port: 33080,
-  username: 'root',
-  password: 'root',
-  database: 'edu_backend_courses',
+  host: process.env.TYPEORM_HOST || '127.0.0.1',
+  port: +process.env.TYPEORM_PORT || 3306,
+  username: process.env.TYPEORM_USERNAME,
+  password: process.env.TYPEORM_PASSWORD,
+  database: process.env.TYPEORM_DATABASE,
   charset: 'utf8mb4',
   entities: ['dist/**/*.entity{.ts,.js}'],
   migrations: ['dist/migrations/**/*.js'],
   cli: {
     migrationsDir: 'src/migrations',
   },
+  logging: (process.env.TYPEORM_LOGGING && process.env.TYPEORM_LOGGING === 'true'),
 };
+
+module.exports = Object.assign({}, defaultConfig, localConfig);
