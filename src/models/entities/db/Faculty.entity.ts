@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Speciality } from './Speciality.entity';
 
 @Entity()
 export class Faculty extends BaseEntity {
@@ -12,4 +13,7 @@ export class Faculty extends BaseEntity {
     name: 'short_name',
   })
   public shortName: string;
+
+  @OneToMany(() => Speciality, (spec) => spec.faculty)
+  public specialities: Speciality[];
 }
