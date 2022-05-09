@@ -13,4 +13,5 @@ export interface ICourse {
   creditsAmount?: number;
   hoursAmount?: number;
   teacherName?: string;
+  rating?: number;
 }
