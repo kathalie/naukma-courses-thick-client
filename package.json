@@ -9,12 +9,14 @@
     "build": "tsc -b",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Tron",
+  "author": "vdzhos",
   "license": "UNLICENSED",
   "dependencies": {
     "@nestjs/common": "8.2.6",
     "@nestjs/core": "8.2.6",
     "@nestjs/platform-express": "8.2.6",
+    "axios": "0.27.2",
+    "cheerio": "1.0.0-rc.10",
     "reflect-metadata": "0.1.13",
     "rxjs": "7.5.2"
   },
