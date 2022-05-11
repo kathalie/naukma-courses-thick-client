@@ -4,7 +4,7 @@ import {
     Get, HttpException,
     InternalServerErrorException,
     NotFoundException,
-    Param
+    Param, ParseIntPipe
 } from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
 import {IScheduleItem} from "./types";
@@ -16,13 +16,10 @@ export class ScheduleController {
   ) {}
 
   @Get(':year/:season')
-  public getCourse(@Param('year') year: number,
+  public getCourse(@Param('year',ParseIntPipe) year: number,
                    @Param('season') season: string,): Promise<IScheduleItem[]> {
       if(season != "autumn" && season != "spring" && season != "summer"){
           throw new BadRequestException(`${season} is an incorrect season!`)
-      }
-      if(isNaN(year)){
-          throw new BadRequestException(`Year ${year} is not not a number!`)
       }
       return this.service.getSchedulesInfo(year,season).then(value => {
           if(value.length==0){

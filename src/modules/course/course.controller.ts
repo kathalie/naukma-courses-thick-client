@@ -1,10 +1,9 @@
 import {
-    BadRequestException,
     Controller,
     Get,
     InternalServerErrorException,
     NotFoundException,
-    Param
+    Param, ParseIntPipe
 } from '@nestjs/common';
 import { CourseService } from './course.service';
 import {ICourse} from "./types";
@@ -16,13 +15,8 @@ export class CourseController {
   ) {}
 
   @Get(':code')
-  public getCourse(@Param('code') code: number): Promise<ICourse> {
-      if(isNaN(code)){
-          throw new BadRequestException(`Course code '${code}' is not a number!`)
-      }
-      return this.service.getCourseInfo(code).then(value => {
-          return value
-      }).catch(err => {
+  public getCourse(@Param('code',ParseIntPipe) code: number): Promise<ICourse> {
+      return this.service.getCourseInfo(code).catch(err => {
           const status = err?.response?.status
           if(status == 404) {
               throw new NotFoundException(`Course with the code '${code}' is not found!`)
