@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {BadRequestException, Injectable} from '@nestjs/common';
 import {IScheduleItem} from "./types";
 import axios from "axios";
 import cheerio from "cheerio";
@@ -6,8 +6,8 @@ import {CourseSeason, EducationLevel} from "../../common/types";
 
 @Injectable()
 export class ScheduleService {
-
-    private static urlPrefix: string = "https://my.ukma.edu.ua/schedule/";
+    //fixed
+    public urlPrefix: string = "https://my.ukma.edu.ua/schedule/";
 
     public async getScheduleData(year: number, seasonStr: string): Promise<IScheduleItem[]> {
         let seasonNum: number;
@@ -16,11 +16,13 @@ export class ScheduleService {
             case 'autumn' : { seasonNum = 1; season = CourseSeason.AUTUMN; break; }
             case 'spring' : { seasonNum = 2; season = CourseSeason.SPRING; break; }
             case 'summer' : { seasonNum = 3; season = CourseSeason.SUMMER; break; }
-            default : seasonNum = 0 ; season = CourseSeason.SUMMER;
+            // некоректного значення сезону тут бути не може, бо це перевіряється у контролері,
+            // тому дефолтне Літо чи інший сезон не викликало б проблем, але напевно краще змінити на помилку
+            default : throw new BadRequestException("Incorrect season.");
         }
         if(seasonNum > 1) year = year - 1;
 
-        const url: string = `${ScheduleService.urlPrefix}?year=${year}&season=${seasonNum}`;
+        const url: string = `${this.urlPrefix}?year=${year}&season=${seasonNum}`;
         const htmlPage =(await axios.get(url)).data;
         const $ = cheerio.load(htmlPage);
 

@@ -7,10 +7,11 @@ import cheerio from "cheerio";
 @Injectable()
 export class CourseService {
 
-    private static urlPrefix: string = "https://my.ukma.edu.ua/course/";
+    // fixed
+    public urlPrefix: string = "https://my.ukma.edu.ua/course/";
 
     public async getCourseData(code: number): Promise<ICourse> {
-        const url: string = `${CourseService.urlPrefix+code}`;
+        const url: string = `${this.urlPrefix+code}`;
         const htmlPage =(await axios.get(url)).data;
         const $ = cheerio.load(htmlPage);
 
