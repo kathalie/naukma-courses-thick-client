@@ -1,14 +1,21 @@
-import { Controller, Get, Param } from '@nestjs/common';
-// import { CourseService } from './course.service';
+import {Controller, Get, InternalServerErrorException, NotFoundException, Param, ParseIntPipe} from '@nestjs/common';
+import { CourseService } from './course.service';
+import {ICourse} from "./types";
 
 @Controller('course')
 export class CourseController {
   constructor(
-    protected readonly service: unknown,
+    protected readonly service: CourseService,
   ) {}
 
   @Get(':code')
-  public async getCourse(@Param('code') code: number): Promise<unknown> {
-    return undefined;
+  public getCourse(@Param('code', ParseIntPipe) code: number): Promise<ICourse> {
+    return this.service.getCourseData(code).catch(error => {
+      if (error?.response?.status == 404) {
+        throw new NotFoundException('There is no course with such code.');
+      } else {
+        throw new InternalServerErrorException('Internal server error.');
+      }
+    });
   }
 }
