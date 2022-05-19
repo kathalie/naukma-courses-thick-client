@@ -2,8 +2,7 @@
   "compilerOptions": {
     "lib": [
       "es5",
-      "es6",
-      "ES2021.String"
+      "es6"
     ],
     "outDir": "./dist",
     "module": "commonjs",
