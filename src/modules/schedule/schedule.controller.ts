@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, ParseIntPipe } from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
 import { IScheduleItemShort } from './types';
 
@@ -10,7 +10,7 @@ export class ScheduleController {
 
 
   @Get('/:year/:season')
-  public async getSchedule(@Param('year') year: number, @Param('season') season: string): Promise<IScheduleItemShort[]> {
+  public async getSchedule(@Param('year', new ParseIntPipe({errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE})) year: number, @Param('season') season: string): Promise<IScheduleItemShort[]> {
     return this.service.getSchedule(year, season);
   } 
 }

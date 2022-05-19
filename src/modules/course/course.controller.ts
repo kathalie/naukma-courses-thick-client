@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, ParseIntPipe } from '@nestjs/common';
 import { CourseService } from './course.service';
 import { ICourse } from './types';
 
@@ -9,7 +9,7 @@ export class CourseController {
   ) {}
 
   @Get(':code')
-  public async getCourse(@Param('code') code: number): Promise<ICourse> {
+  public async getCourse(@Param('code', new ParseIntPipe({errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE})) code: number): Promise<ICourse> {
     return await this.service.getCourseInfo(code);
   }
 }

@@ -10,5 +10,5 @@ export interface IScheduleItem extends IScheduleItemShort {
   specialityName: string;
   level: EducationLevel;
   year: number;
-  season: CourseSeason | undefined;
+  season?: CourseSeason;
 }

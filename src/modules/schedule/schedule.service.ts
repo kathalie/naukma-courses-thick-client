@@ -22,7 +22,7 @@ export class ScheduleService {
 	}
 
 	private validateRequest(year: number, season: string): void {
-		if (isNaN(year) || this.getSeason(season) === -1) {
+		if (this.getSeason(season) === -1) {
 			throw new BadRequestException(BAD_REQUEST_EXCEPTION_TEXT);
 		}
 	}
@@ -61,7 +61,7 @@ export class ScheduleService {
 		const accordionIdFaculty = idFaculty + '-accordion';
 		const facultySchedule = $(faculty).find(`#${accordionIdFaculty} > div`).each((i, e) => {
 			const specialtyHeading = $(e).find('div:nth-child(1) > h4 > a').text().split(' ').filter(word => word.length > 0);
-			const educationLevelAbbreviation = specialtyHeading[1].replaceAll(',', '');
+			const educationLevelAbbreviation = specialtyHeading[1].replace(/,+/g, '');
 			const year: number = +specialtyHeading[2];
 			const educationLevel: EducationLevel = educationLevelAbbreviation === 'БП' ? EducationLevel.BACHELOR : EducationLevel.MASTER;
 			const idFacultyYear: string = idFaculty + '-' + ((educationLevel === EducationLevel.BACHELOR) ? 1 : 2) + '-' + year;
