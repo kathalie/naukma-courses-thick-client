@@ -1,15 +1,36 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import { IPaginationOptions } from 'nestjs-typeorm-paginate';
 import { BAD_REQUEST_EXCEPTION_TEXT, BASE_URL, NOT_FOUND_EXCEPTION_TEXT } from '../../common/constants';
 import { CourseSeason, EducationLevel } from '../../common/types';
 import { convertString } from '../../common/util';
+import { Course } from '../../models/Course.entity';
+import { CourseReview } from '../../models/CourseReview.entity';
+import { CourseReviewDTO } from './dto/course-review.dto';
 import { ICourse } from './types';
 
 @Injectable()
 export class CourseService {
 
   public async getCourseInfo(code: number): Promise<ICourse> {
+    const course: Course | undefined = await Course.findOne({
+      where: {
+        code: code
+      }
+    });
+    if (course !== undefined) {
+      return course;
+    }
+    const parsedCourse: ICourse = await this.getParsedCourseInfo(code);
+    const courseToSave: Course = Course.create({
+      ...parsedCourse
+    })
+    courseToSave.save();
+    return courseToSave;
+  }
+
+  public async getParsedCourseInfo(code: number): Promise<ICourse> {
     this.validateRequest(code);
 
     const response = await axios.get(`${BASE_URL}/course/${code}`)
@@ -92,5 +113,37 @@ export class CourseService {
 
   private appendTd(path: string): string {
     return `${path} > td`;
+  }
+
+  public async saveCourseReview(code: number, dto: CourseReviewDTO): Promise<CourseReview> {
+    const courseReview = CourseReview.create();
+    courseReview.courseId = code;
+    courseReview.rating = dto.rating;
+    courseReview.text = dto.text;
+    return await courseReview.save();
+  }
+
+  public async getReviews(code: number, options: IPaginationOptions): Promise<{code: number, items: CourseReviewDTO[], averageRating: number,
+    ratingCount: number  }> {
+    const [reviews, ratingCount]: [CourseReview[], number] = await CourseReview.findAndCount({
+      where: {
+        courseId: code
+      },
+      take: +options.limit,
+      skip: (+options.page - 1) * +options.limit
+      
+      
+    });
+    let averageRating = 0;
+    reviews.forEach(({rating}: {rating: number}) => averageRating += rating);
+    const reviewsDTO: CourseReviewDTO[] = reviews.map(review => {
+      return {
+        rating: review.rating,
+        text: review.text
+      }
+    });
+    return {
+      code: code,
+      items: reviewsDTO, averageRating: averageRating / ratingCount, ratingCount: ratingCount};
   }
 }
