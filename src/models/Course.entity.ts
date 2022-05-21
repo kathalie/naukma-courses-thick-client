@@ -3,7 +3,7 @@ import { CourseSeason, EducationLevel } from '../common/types';
 import { ICourse } from '../modules/course/types';
 
 @Entity()
-export class Course extends BaseEntity implements ICourse{
+export class Course extends BaseEntity implements ICourse {
 	@PrimaryColumn({
 		type: "integer"
 	})
@@ -14,7 +14,7 @@ export class Course extends BaseEntity implements ICourse{
 		length: 100
 	})
 	public name: string;
-	
+
 	@Column({
 		type: "text",
 		nullable: true
@@ -39,7 +39,7 @@ export class Course extends BaseEntity implements ICourse{
 		enum: EducationLevel
 	})
 	public level: EducationLevel;
-	
+
 	@Column({
 		type: "smallint"
 	})

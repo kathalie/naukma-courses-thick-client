@@ -123,19 +123,19 @@ export class CourseService {
     return await courseReview.save();
   }
 
-  public async getReviews(code: number, options: IPaginationOptions): Promise<{code: number, items: CourseReviewDTO[], averageRating: number,
-    ratingCount: number  }> {
+  public async getReviews(code: number, options: IPaginationOptions): Promise<{
+    code: number, items: CourseReviewDTO[], averageRating: number,
+    ratingCount: number
+  }> {
     const [reviews, ratingCount]: [CourseReview[], number] = await CourseReview.findAndCount({
       where: {
         courseId: code
       },
       take: +options.limit,
       skip: (+options.page - 1) * +options.limit
-      
-      
     });
     let averageRating = 0;
-    reviews.forEach(({rating}: {rating: number}) => averageRating += rating);
+    reviews.forEach(({ rating }: { rating: number }) => averageRating += rating);
     const reviewsDTO: CourseReviewDTO[] = reviews.map(review => {
       return {
         rating: review.rating,
@@ -144,6 +144,7 @@ export class CourseService {
     });
     return {
       code: code,
-      items: reviewsDTO, averageRating: averageRating / ratingCount, ratingCount: ratingCount};
+      items: reviewsDTO, averageRating: averageRating / reviewsDTO.length, ratingCount: reviewsDTO.length
+    };
   }
 }

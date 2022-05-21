@@ -21,6 +21,6 @@ export class CourseReview extends BaseEntity {
 		type: "text",
 		nullable: true
 	})
-	public text?: string = "";	
+	public text?: string = "";
 
 }
