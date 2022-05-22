@@ -8,7 +8,7 @@ import { IScheduleItem } from "./types";
 let season: CourseSeason;
 
 function getElementName($: cheerio.Root, element: cheerio.Element) {
-    return $(element).find('> div.panel-heading > h4 > a').text().replace(/\n/g, '').replace(/ +/g, ' ').trim();
+    return $(element).find('> div.panel-heading > h4 > a').text().replace(/\s+/g, '').trim();
 }
 
 function parseSpeciality($: cheerio.Root, specialityElement: cheerio.Element, facultyName: string, year: number, level: EducationLevel): IScheduleItem {

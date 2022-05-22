@@ -12,8 +12,8 @@ export class CourseService {
             .then(({ data }) => {
                 return parseCoursePage(data, courseId);
             })
-            .catch(({ response }) => {
-                if (response?.status === 404) {
+            .catch((err) => {
+                if (err?.response?.status === 404) {
                     throw new HttpException(`Course with id ${courseId} does not exist`, HttpStatus.NOT_FOUND);
                 } else {
                     throw new HttpException(`Can't connect to my.ukma.edu.ua`, HttpStatus.INTERNAL_SERVER_ERROR);
