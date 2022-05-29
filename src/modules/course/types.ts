@@ -4,7 +4,7 @@ export interface ICourse {
   code: number;
   name: string;
   description?: string;
-  facultyName: string;  // Назва факультету
+  facultyName: string; // Назва факультету
   departmentName: string; // Назва кафедри
   level: EducationLevel;
   // year: 1 | 2 | 3 | 4;
@@ -13,4 +13,5 @@ export interface ICourse {
   creditsAmount?: number;
   hoursAmount?: number;
   teacherName?: string;
+  rating?: number;
 }
