@@ -12,3 +12,5 @@ export interface IScheduleItem extends IScheduleItemShort {
   year: 1 | 2 | 3 | 4;
   season: CourseSeason;
 }
+
+export type Season = 'summer' | 'spring' | 'autumn';
