@@ -1,18 +1,20 @@
-import {BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {
+  BaseEntity, Column, Entity, PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class CourseFeedback extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+    id: number;
 
   @Column()
-  courseId: number;
+    courseId: number;
 
-  @Column({type: "tinyint"})
-  rating: number;
+  @Column({ type: 'tinyint' })
+    rating: number;
 
   @Column('text', {
-    nullable: true
+    nullable: true,
   })
-  text?: string
+    text?: string;
 }

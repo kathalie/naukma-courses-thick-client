@@ -18,7 +18,7 @@ const defaultConfig = {
   cli: {
     migrationsDir: 'src/migration',
   },
-  keepConnectionAlive: true,
+  keepConnectionAlive: false,
   logging: (process.env.TYPEORM_LOGGING && process.env.TYPEORM_LOGGING === "true"),
 }
 module.exports = Object.assign({}, defaultConfig, localConfig);

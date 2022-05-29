@@ -1,28 +1,27 @@
-import {Injectable} from '@nestjs/common';
-import {CourseFeedback} from "../../models/entity/CourseFeedback";
-import {CourseFeedbackDto} from "../../models/dto/CourseFeedback.dto";
+import { Injectable } from '@nestjs/common';
+import { CourseFeedback } from '../../models/entity/CourseFeedback';
+import { CourseFeedbackDto } from '../../models/dto/CourseFeedback.dto';
 
 @Injectable()
 export class CourseFeedbackService {
   public async findAllByCode(code: number): Promise<CourseFeedbackDto[]> {
-    let resDto: CourseFeedbackDto[] = [];
-    const res: CourseFeedback[] = await CourseFeedback.find({where: {courseId: code}});
-    res.forEach(x => {
-        resDto.push({
-          rating: x.rating,
-          text: x.text
-        })
-      }
-    );
+    const res: CourseFeedback[] = await CourseFeedback.find({ where: { courseId: code } });
+    res.forEach((x) => {
+      resDto.push({
+        rating: x.rating,
+        text: x.text,
+      });
+    });
+    const resDto: CourseFeedbackDto[] = res.map((x) => ({
+      rating: x.rating,
+      text: x.text,
+    }));
     return resDto;
   }
 
   public async findRateAverageByCode(code: number): Promise<number> {
-    let res = await this.findAllByCode(code);
-    let rateSum = 0;
-    res.forEach(x => {
-      rateSum += x.rating
-    });
+    const res = await this.findAllByCode(code);
+    const rateSum = res.reduce((accumulator, currentValue) => accumulator + currentValue.rating, 0);
     return (rateSum / res.length);
   }
 
