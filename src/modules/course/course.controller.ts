@@ -1,5 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { CourseService } from './course.service';
+import {ICourse} from "./types";
 
 @Controller('course')
 export class CourseController {
@@ -8,7 +9,7 @@ export class CourseController {
   ) {}
 
   @Get(':code')
-  public async getCourse(@Param('code') code: number): Promise<unknown> {
-    return undefined;
+  public async getCourse(@Param('code') code: number): Promise<ICourse> {
+    return this.service.parsedCourse(code);
   }
 }
