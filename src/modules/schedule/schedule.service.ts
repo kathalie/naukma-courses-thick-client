@@ -11,13 +11,14 @@ import {AnyNode} from "cheerio";
 export class ScheduleService {
     private readonly link = 'https://my.ukma.edu.ua/schedule/';
 
-    async parsedTimetable(year: number, season: string): Promise<IScheduleItem[]> {
+    async parsedTimetable(year: number, season: number): Promise<IScheduleItem[]> {
         const response = await axios(this.link, {
             params: {
                 year: year,
                 season: season
             }
-        });
+        }).catch(err => {throw err;});
+
         const htmlParser = new HtmlParser(response.data);
         const schedule = [] as IScheduleItem[];
 
@@ -49,16 +50,6 @@ export class ScheduleService {
                 schedule.push(htmlParser.normalize(normalization));
             }
         }
-
-        // const schema: Schema<IScheduleItem> = {
-        //     facultyName: [ScheduleSelectors.facultyNameSelector, CheerioRetrievers.trimmedText],
-        //     level: [ScheduleSelectors.levelSelector, CheerioRetrievers.toEducationLevel],
-        //     season: [ScheduleSelectors.seasonSelector, CheerioRetrievers.toSeason],
-        //     specialityName: [ScheduleSelectors.specialityNameSelector, CheerioRetrievers.trimmedText],
-        //     updatedAt: [ScheduleSelectors.updatedAtSelector, CheerioRetrievers.trimmedText],
-        //     url: [ScheduleSelectors.urlSelector, CheerioRetrievers.trimmedText],
-        //     year: [ScheduleSelectors.yearSelector, CheerioRetrievers.toYear]
-        // };
 
         return schedule;
     }

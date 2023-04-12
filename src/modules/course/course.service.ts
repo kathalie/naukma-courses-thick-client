@@ -2,7 +2,7 @@ import {Injectable} from '@nestjs/common';
 import axios from "axios";
 
 import {ICourse} from "./types";
-import { HtmlParser, Schema} from "../../common/htmlParser/html_parser";
+import {HtmlParser, Schema} from "../../common/htmlParser/html_parser";
 import {CheerioRetrievers, toNumber} from "../../common/htmlParser/cheerio_retrievers";
 import {CourseSelectors} from "./course.selectors";
 
@@ -11,7 +11,9 @@ export class CourseService {
     private readonly link = 'https://my.ukma.edu.ua/course/';
 
     async parsedCourse(code: number): Promise<ICourse> {
-        const response = await axios(`${this.link}${code}`);
+
+        const response = await axios(`${this.link}${code}`).catch(err => {throw err; });
+
         const htmlParser = new HtmlParser(response.data);
 
         const schema: Schema<ICourse> = {
