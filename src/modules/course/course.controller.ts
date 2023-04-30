@@ -1,4 +1,4 @@
-import {Controller, Get, HttpStatus, Param} from '@nestjs/common';
+import {Body, Controller, Get, HttpStatus, Param, Post} from '@nestjs/common';
 import { CourseService } from './course.service';
 import {ICourse} from "./types";
 import {BadCodeException, CourseNotFoundException, DisconnectedException} from "../../common/exceptions";
@@ -20,4 +20,14 @@ export class CourseController {
       throw err;
     });
   }
+
+  // @Get(':code/reviews')
+  // public async getCourseReviews(@Param('code') code: number): Promise<IReview[]> {
+  //
+  // }
+
+  // @Post(':code/reviews')
+  // public async createCourseReview(@Body() review: IReview) {
+  //
+  // }
 }
