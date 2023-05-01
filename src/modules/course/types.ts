@@ -13,3 +13,7 @@ export interface ICourse {
   hoursAmount?: number;
   teacherName?: string;
 }
+
+export interface CourseWithRating extends ICourse {
+  rating?: number;
+}

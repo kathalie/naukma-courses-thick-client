@@ -7,7 +7,9 @@
     "start": "node dist/index.js",
     "start:watch": "tsc-watch -b tsconfig.json --onSuccess \"cross-env NODE_EXTRA_CA_CERTS=./intermediate.pem node dist/index.js\"",
     "build": "tsc -b",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migration:generate": "npx typeorm migration:generate ./src/migration/Migration -d ./dist/data-source.js",
+    "migration:run": "typeorm migration:run -d ./dist/data-source.js"
   },
   "author": "Kateryna Verkhohliad",
   "license": "UNLICENSED",

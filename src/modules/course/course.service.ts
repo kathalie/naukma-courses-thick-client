@@ -5,14 +5,17 @@ import {ICourse} from "./types";
 import {HtmlParser, Schema} from "../../common/htmlParser/html_parser";
 import {CheerioRetrievers, toNumber} from "../../common/htmlParser/cheerio_retrievers";
 import {CourseSelectors} from "./course.selectors";
+import * as http from "http";
+import {Course} from "../../models/entities/Course.entity";
 
 @Injectable()
 export class CourseService {
     private readonly link = 'https://my.ukma.edu.ua/course/';
 
-    async parsedCourse(code: number): Promise<ICourse> {
-
-        const response = await axios(`${this.link}${code}`).catch(err => {throw err; });
+    async getParsedCourse(code: number): Promise<Course> {
+        const response = await axios(`${this.link}${code}`).catch(err => {
+            throw err;
+        });
 
         const htmlParser = new HtmlParser(response.data);
 
@@ -30,6 +33,23 @@ export class CourseService {
             teacherName: [CourseSelectors.teacherNameSelector, CheerioRetrievers.trimmedText]
         }
 
-        return htmlParser.parse<ICourse>(schema);
+        const parsedICourse = htmlParser.parse<ICourse>(schema);
+        const parsedCourse = Object.assign(new Course(), parsedICourse) as Course;
+
+        return await Course.save(parsedCourse);
+    }
+
+    async getCourse(code: number) {
+        const cashedCourse = await Course.createQueryBuilder()
+            .select('*')
+            .from(Course, '_course')
+            .where('_course.code = :code', {code})
+            .getOne();
+
+        const course = cashedCourse
+            ? cashedCourse
+            : await this.getParsedCourse(code);
+
+        return course;
     }
 }

@@ -2,23 +2,15 @@ import {Module} from '@nestjs/common';
 import {CourseModule} from './modules/course/course.module';
 import {ScheduleModule} from './modules/schedule/schedule.module';
 import {TypeOrmModule} from "@nestjs/typeorm";
-
+import {AppDataSource} from "./data-source";
+import {CourseFeedbackModule} from "./modules/course_feedback/course_feedback.module";
 
 @Module({
     imports: [
         CourseModule,
         ScheduleModule,
-        TypeOrmModule.forRoot({
-            type: 'mysql',
-            host: '127.0.0.1',
-            port: 33080,
-            username: 'root',
-            password: 'root',
-            database: 'node-js-task-03',
-            entities: ['dist/**/*.entity.js'],
-            charset: 'utf8mb4',
-            logging: true
-        }),
+        CourseFeedbackModule,
+        TypeOrmModule.forRoot(AppDataSource.options),
     ],
     controllers: [],
     providers: [],

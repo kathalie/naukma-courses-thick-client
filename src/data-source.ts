@@ -10,6 +10,6 @@ export const AppDataSource = new DataSource({
     entities: ['dist/**/*.entity.js'],
     //entities: [CourseFeedback],
     charset: 'utf8mb4',
-    migrations: ['dist/migrations/**/*.js'],
+    migrations: ['dist/migration/**/*.js'],
     logging: true
 });

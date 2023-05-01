@@ -2,6 +2,7 @@ import {Body, Controller, Get, HttpStatus, Param, Post} from '@nestjs/common';
 import { CourseService } from './course.service';
 import {ICourse} from "./types";
 import {BadCodeException, CourseNotFoundException, DisconnectedException} from "../../common/exceptions";
+import {validateCode} from "../../utils/validators";
 
 @Controller('course')
 export class CourseController {
@@ -10,10 +11,10 @@ export class CourseController {
   ) {}
 
   @Get(':code')
-  public async getCourse(@Param('code') code: number): Promise<ICourse> {
-    if(!/\d+/.test(code.toString())) throw new BadCodeException();
+  public async getCourse(@Param('code') code: number) {
+    validateCode(code);
 
-    return this.service.parsedCourse(code).catch(err => {
+    return this.service.getCourse(code).catch(err => {
       if (err.response?.status === HttpStatus.NOT_FOUND) throw new CourseNotFoundException();
       if (err.response?.status !== HttpStatus.OK) throw new DisconnectedException();
 
