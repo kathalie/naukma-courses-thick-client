@@ -14,7 +14,7 @@ export class CourseController {
   public async getCourse(@Param('code') code: number) {
     validateCode(code);
 
-    return this.service.getCourse(code).catch(err => {
+    return this.service.getCourseWithStats(code).catch(err => {
       if (err.response?.status === HttpStatus.NOT_FOUND) throw new CourseNotFoundException();
       if (err.response?.status !== HttpStatus.OK) throw new DisconnectedException();
 

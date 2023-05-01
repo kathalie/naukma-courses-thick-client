@@ -3,7 +3,6 @@ import {CourseFeedbackService} from "./course_feedback.service";
 import {CourseNotFoundException, DisconnectedException} from "../../common/exceptions";
 import {validateCode} from "../../utils/validators";
 import {AllFeedbacksDto, CreateFeedbackDto} from "./dto";
-import {CourseFeedback} from "../../models/entities/CourseFeedback.entity";
 
 @Controller('course')
 export class CourseFeedbackController {

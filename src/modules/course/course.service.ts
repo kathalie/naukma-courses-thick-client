@@ -7,6 +7,7 @@ import {CheerioRetrievers, toNumber} from "../../common/htmlParser/cheerio_retri
 import {CourseSelectors} from "./course.selectors";
 import * as http from "http";
 import {Course} from "../../models/entities/Course.entity";
+import {CourseFeedbackService} from "../course_feedback/course_feedback.service";
 
 @Injectable()
 export class CourseService {
@@ -40,16 +41,19 @@ export class CourseService {
     }
 
     async getCourse(code: number) {
-        const cashedCourse = await Course.createQueryBuilder()
-            .select('*')
-            .from(Course, '_course')
-            .where('_course.code = :code', {code})
-            .getOne();
+        const cashedCourse = await Course.findOneBy({code});
 
-        const course = cashedCourse
+        return cashedCourse
             ? cashedCourse
             : await this.getParsedCourse(code);
+    }
 
-        return course;
+    async getCourseWithStats(code: number) {
+        const course = await this.getCourse(code);
+
+        const rating = await new CourseFeedbackService().getAverageRating(code);
+        const ratingCount = await new CourseFeedbackService().getRatingCount(code);
+
+        return {...course, rating, ratingCount};
     }
 }

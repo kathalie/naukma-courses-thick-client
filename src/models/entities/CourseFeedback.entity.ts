@@ -9,7 +9,7 @@ export class CourseFeedback extends BaseEntity {
     @Column({type: 'tinyint'})
     public rating: number;
 
-    @Column({type: 'text'})
+    @Column({type: 'text', nullable: true})
     public text?: string;
 
     @ManyToOne(() => Course, (course) => course.feedbacks, {cascade: true})

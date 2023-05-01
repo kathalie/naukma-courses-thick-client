@@ -1,7 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {CreateFeedbackDto} from "./dto";
 import {CourseFeedback} from "../../models/entities/CourseFeedback.entity";
-import {CourseController} from "../course/course.controller";
 import {CourseService} from "../course/course.service";
 import {Course} from "../../models/entities/Course.entity";
 
@@ -18,7 +17,10 @@ export class CourseFeedbackService {
     }
 
     public async getAllFeedbacks(code: number): Promise<CreateFeedbackDto[]> {
-        const feedbacks = await CourseFeedback.find();
+        const feedbacks = await CourseFeedback.createQueryBuilder('feedbacks')
+            .select()
+            .where('feedbacks.courseCode = :code', {code})
+            .getMany();
 
         return feedbacks.map(feedback => {
             return {
@@ -29,10 +31,20 @@ export class CourseFeedbackService {
     }
 
     public async getAverageRating(code: number): Promise<number> {
-        return 0;
+        const res =  await CourseFeedback.createQueryBuilder('_course_feedback')
+            .select('ROUND(AVG(rating), 2)', 'average_rating')
+            .where('_course_feedback.courseCode = :code', {code})
+            .getRawOne();
+
+        return +res.average_rating;
     }
 
     public async getRatingCount(code: number): Promise<number> {
-        return 0;
+        const res = await CourseFeedback.createQueryBuilder('_course_feedback')
+            .select('COUNT(rating)', 'feedback_count')
+            .where('_course_feedback.courseCode = :code', {code})
+            .getRawOne();
+
+        return +res.feedback_count;
     }
 }
