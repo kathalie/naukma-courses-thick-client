@@ -5,13 +5,13 @@ import {ICourse} from "./types";
 import {HtmlParser, Schema} from "../../common/htmlParser/html_parser";
 import {CheerioRetrievers, toNumber} from "../../common/htmlParser/cheerio_retrievers";
 import {CourseSelectors} from "./course.selectors";
-import * as http from "http";
 import {Course} from "../../models/entities/Course.entity";
 import {CourseFeedbackService} from "../course_feedback/course_feedback.service";
 
 @Injectable()
 export class CourseService {
     private readonly link = 'https://my.ukma.edu.ua/course/';
+
 
     async getParsedCourse(code: number): Promise<Course> {
         const response = await axios(`${this.link}${code}`).catch(err => {

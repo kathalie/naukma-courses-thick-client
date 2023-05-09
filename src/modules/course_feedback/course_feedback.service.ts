@@ -2,10 +2,10 @@ import {Injectable} from "@nestjs/common";
 import {CreateFeedbackDto} from "./dto";
 import {CourseFeedback} from "../../models/entities/CourseFeedback.entity";
 import {CourseService} from "../course/course.service";
-import {Course} from "../../models/entities/Course.entity";
 
 @Injectable()
 export class CourseFeedbackService {
+
     public async create(code: number, feedbackDto: CreateFeedbackDto): Promise<CourseFeedback> {
         let courseFeedback = new CourseFeedback();
 

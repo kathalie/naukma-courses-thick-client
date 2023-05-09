@@ -22,6 +22,7 @@
     "cheerio": "1.0.0-rc.12",
     "cross-env": "7.0.3",
     "mysql2": "3.2.4",
+    "nestjs-typeorm-paginate": "4.0.3",
     "reflect-metadata": "0.1.13",
     "rxjs": "7.5.2",
     "typeorm": "0.3.15"

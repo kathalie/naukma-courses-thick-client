@@ -7,6 +7,11 @@ export class CourseNotFoundException extends HttpException {
     }
 }
 
+export const badCodeOptions = {
+    errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+    exceptionFactory: (err) => 'Code should be a number!'
+} as const;
+
 //Некоректний (нечисловий) код
 export class BadCodeException extends HttpException {
     constructor() {

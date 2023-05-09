@@ -1,4 +1,4 @@
-import {Controller, Get, HttpStatus, Param} from '@nestjs/common';
+import {Controller, Get, HttpStatus, Param, ParseIntPipe} from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
 import {
   BadSeasonException, BadYearException,
