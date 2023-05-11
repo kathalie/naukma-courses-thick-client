@@ -22,10 +22,7 @@ export class Course extends BaseEntity {
     @Column({type: 'enum', enum: EducationLevel, enumName: "course_level_enum"})
     public level: EducationLevel;
 
-    //TODO type!!!
-    @Column({
-        //type:
-    })
+    @Column({type: 'tinyint'})
     public year: 1 | 2 | 3 | 4;
 
     @Column({type: 'set', enum: CourseSeason,})

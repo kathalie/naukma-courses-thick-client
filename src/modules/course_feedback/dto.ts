@@ -1,10 +1,11 @@
-export type CreateFeedbackDto = {
-    rating: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10,
-    text?: string,
-}
+import {IsIn} from "class-validator";
 
-export type AllFeedbacksDto = {
-    items: CreateFeedbackDto[],
-    rating: number,
-    ratingCount: number,
+export class CreateFeedbackDto {
+    @IsIn(Array.from(
+        {length: 10},
+        (_, index) => index + 1
+    ))
+    rating: number;
+
+    text?: string;
 }

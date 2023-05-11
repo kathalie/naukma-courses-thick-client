@@ -1,4 +1,4 @@
-import {selector} from "../../common/htmlParser/css_selector_builder";
+import {selector} from "../../utils/css_selector_builder";
 
 export class ScheduleSelectors {
     static readonly facultyBlocksSelector =

@@ -1,8 +1,19 @@
-import {Body, Controller, DefaultValuePipe, Get, HttpStatus, Param, ParseIntPipe, Post, Query} from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    DefaultValuePipe,
+    Get,
+    HttpStatus,
+    Param,
+    ParseIntPipe,
+    Post,
+    Query
+} from "@nestjs/common";
 import {CourseFeedbackService} from "./course_feedback.service";
 import {badCodeOptions, CourseNotFoundException, DisconnectedException} from "../../common/exceptions";
-import {AllFeedbacksDto, CreateFeedbackDto} from "./dto";
-import {FeedbackBodyValidationPipe} from "./validation_pipes";
+import {CreateFeedbackDto} from "./dto";
+import {AxiosError} from "axios";
+import {AllFeedbacks} from "./types";
 
 @Controller('course')
 export class CourseFeedbackController {
@@ -10,12 +21,12 @@ export class CourseFeedbackController {
     }
 
     @Post(':code/review')
-    public async create(@Param('code', new ParseIntPipe(badCodeOptions)) code: number, @Body(new FeedbackBodyValidationPipe()) createFeedbackDto: CreateFeedbackDto) {
+    public async create(@Param('code', new ParseIntPipe(badCodeOptions)) code: number, @Body() createFeedbackDto: CreateFeedbackDto) {
         try {
             return await this.service.create(code, createFeedbackDto);
         } catch (err) {
-            if (err.response?.status === HttpStatus.NOT_FOUND) throw new CourseNotFoundException();
-            if (err.response?.status !== HttpStatus.OK) throw new DisconnectedException();
+            if ((err as AxiosError).response?.status === HttpStatus.NOT_FOUND) throw new CourseNotFoundException();
+            if ((err as AxiosError).response?.status !== HttpStatus.OK) throw new DisconnectedException();
         }
     }
 
@@ -24,7 +35,7 @@ export class CourseFeedbackController {
         @Param('code', new ParseIntPipe(badCodeOptions)) code: number,
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
         @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
-    ): Promise<AllFeedbacksDto> {
+    ): Promise<AllFeedbacks | undefined> {
         try {
             const items = await this.service.getAllFeedbacks(code);
             const averageRating = await this.service.getAverageRating(code);
@@ -36,8 +47,8 @@ export class CourseFeedbackController {
                 ratingCount: ratingCount
             }
         } catch (err) {
-            if (err.response?.status === HttpStatus.NOT_FOUND) throw new CourseNotFoundException();
-            if (err.response?.status !== HttpStatus.OK) throw new DisconnectedException();
+            if ((err as AxiosError).response?.status === HttpStatus.NOT_FOUND) throw new CourseNotFoundException();
+            if ((err as AxiosError).response?.status !== HttpStatus.OK) throw new DisconnectedException();
         }
     }
 }

@@ -2,53 +2,53 @@ import {Injectable} from '@nestjs/common';
 import axios from "axios";
 
 import {ICourse} from "./types";
-import {HtmlParser, Schema} from "../../common/htmlParser/html_parser";
-import {CheerioRetrievers, toNumber} from "../../common/htmlParser/cheerio_retrievers";
+import {HtmlParser, Schema} from "../../utils/html_parser";
 import {CourseSelectors} from "./course.selectors";
 import {Course} from "../../models/entities/Course.entity";
 import {CourseFeedbackService} from "../course_feedback/course_feedback.service";
+import {plainToClass} from "class-transformer";
+import {CheerioNormalizers, toNumber} from "../../utils/cheerio/cheerio_normalizers";
 
 @Injectable()
 export class CourseService {
-    private readonly link = 'https://my.ukma.edu.ua/course/';
+    private readonly courseApiUrl = 'https://my.ukma.edu.ua/course/';
 
-
-    async getParsedCourse(code: number): Promise<Course> {
-        const response = await axios(`${this.link}${code}`).catch(err => {
-            throw err;
+    public async getParsedCourse(code: number): Promise<Course> {
+        const response = await axios({
+            baseURL: this.courseApiUrl,
+            params: {
+                code
+            }
         });
 
         const htmlParser = new HtmlParser(response.data);
 
         const schema: Schema<ICourse> = {
-            code: [CourseSelectors.codeSelector, CheerioRetrievers.toNumber],
-            name: [CourseSelectors.nameSelector, CheerioRetrievers.trimmedText],
-            description: [CourseSelectors.descriptionSelector(code), CheerioRetrievers.trimmedText],
-            facultyName: [CourseSelectors.facultyNameSelector, CheerioRetrievers.trimmedText],
-            departmentName: [CourseSelectors.departmentNameSelector, CheerioRetrievers.trimmedText],
-            level: [CourseSelectors.levelSelector, CheerioRetrievers.toEducationLevel],
-            year: [CourseSelectors.yearSelector, CheerioRetrievers.toYear],
-            seasons: [CourseSelectors.seasonsSelector, CheerioRetrievers.toArray(CheerioRetrievers.toSeason, htmlParser.$)],
-            creditsAmount: [CourseSelectors.creditsAmountSelector, CheerioRetrievers.firstPartOf(toNumber, ' ')],
-            hoursAmount: [CourseSelectors.hoursAmountSelector, CheerioRetrievers.firstPartOf(toNumber, ' ')],
-            teacherName: [CourseSelectors.teacherNameSelector, CheerioRetrievers.trimmedText]
+            code: [CourseSelectors.codeSelector, CheerioNormalizers.toNumber],
+            name: [CourseSelectors.nameSelector, CheerioNormalizers.trimmedText],
+            description: [CourseSelectors.descriptionSelector(code), CheerioNormalizers.trimmedText],
+            facultyName: [CourseSelectors.facultyNameSelector, CheerioNormalizers.trimmedText],
+            departmentName: [CourseSelectors.departmentNameSelector, CheerioNormalizers.trimmedText],
+            level: [CourseSelectors.levelSelector, CheerioNormalizers.toEducationLevel],
+            year: [CourseSelectors.yearSelector, CheerioNormalizers.toYear],
+            seasons: [CourseSelectors.seasonsSelector, CheerioNormalizers.toArray(CheerioNormalizers.toSeason, htmlParser.$)],
+            creditsAmount: [CourseSelectors.creditsAmountSelector, CheerioNormalizers.firstPartOf(toNumber, ' ')],
+            hoursAmount: [CourseSelectors.hoursAmountSelector, CheerioNormalizers.firstPartOf(toNumber, ' ')],
+            teacherName: [CourseSelectors.teacherNameSelector, CheerioNormalizers.trimmedText]
         }
 
-        const parsedICourse = htmlParser.parse<ICourse>(schema);
-        const parsedCourse = Object.assign(new Course(), parsedICourse) as Course;
+        const parsedCourse = plainToClass(Course, htmlParser.parse<ICourse>(schema));
 
         return await Course.save(parsedCourse);
     }
 
-    async getCourse(code: number) {
-        const cashedCourse = await Course.findOneBy({code});
+    public async getCourse(code: number) {
+        const cachedCourse = await Course.findOneBy({code});
 
-        return cashedCourse
-            ? cashedCourse
-            : await this.getParsedCourse(code);
+        return cachedCourse ?? await this.getParsedCourse(code);
     }
 
-    async getCourseWithStats(code: number) {
+    public async getCourseWithStats(code: number) {
         const course = await this.getCourse(code);
 
         const rating = await new CourseFeedbackService().getAverageRating(code);

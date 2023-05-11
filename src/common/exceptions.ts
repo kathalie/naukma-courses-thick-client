@@ -1,47 +1,24 @@
-import {HttpException, HttpStatus} from "@nestjs/common";
+import {
+    HttpStatus,
+    InternalServerErrorException,
+    NotFoundException
+} from "@nestjs/common";
 
 //Курс відсутній на САЗ
-export class CourseNotFoundException extends HttpException {
+export class CourseNotFoundException extends NotFoundException {
     constructor() {
-        super('Course was not found.', HttpStatus.NOT_FOUND);
+        super('Course was not found.');
+    }
+}
+
+//Проблеми зі зв'язком із САЗ
+export class DisconnectedException extends InternalServerErrorException {
+    constructor() {
+        super('The site is currently unavailable.');
     }
 }
 
 export const badCodeOptions = {
     errorHttpStatusCode: HttpStatus.BAD_REQUEST,
-    exceptionFactory: (err) => 'Code should be a number!'
+    exceptionFactory: (_: string) => 'Code should be a number!'
 } as const;
-
-//Некоректний (нечисловий) код
-export class BadCodeException extends HttpException {
-    constructor() {
-        super('Code should be a number!', HttpStatus.BAD_REQUEST);
-    }
-}
-
-//Проблеми зі зв'язком із САЗ
-export class DisconnectedException extends HttpException {
-    constructor() {
-        super('The site is currently unavailable.', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-}
-
-
-//На сторінці семестру відсутні розклади
-export class SchedulesNotFoundException extends HttpException {
-    constructor() {
-        super('Schedules were not found.', HttpStatus.NOT_FOUND);
-    }
-}
-
-export class BadYearException extends HttpException {
-    constructor() {
-        super('Year should be a number!', HttpStatus.BAD_REQUEST);
-    }
-}
-
-export class BadSeasonException extends HttpException {
-    constructor() {
-        super('Season should be "spring", "summer" or "autumn"!', HttpStatus.BAD_REQUEST);
-    }
-}

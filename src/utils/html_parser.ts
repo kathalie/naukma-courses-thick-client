@@ -1,7 +1,7 @@
 import * as cheerio from "cheerio";
 import {CheerioAPI} from "cheerio";
-import {Normalizer, Retriever} from "./cheerio_retrievers";
 import {CssSelectorBuilder} from "./css_selector_builder";
+import {Normalizer, Retriever} from "./cheerio/cheerio_helpers";
 
 export type Schema<I> = Record<keyof I, [CssSelectorBuilder, Retriever<I[keyof I]>]>;
 export type Normalization<I> = Record<keyof I, [string, Normalizer<I[keyof I]>]>;
