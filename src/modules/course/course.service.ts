@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {forwardRef, Inject, Injectable} from '@nestjs/common';
 import axios from "axios";
 
 import {ICourse} from "./types";
@@ -11,6 +11,11 @@ import {CheerioNormalizers, toNumber} from "../../utils/cheerio/cheerio_normaliz
 
 @Injectable()
 export class CourseService {
+    constructor(
+        @Inject(forwardRef(() => CourseFeedbackService))
+        private courseFeedbackService: CourseFeedbackService) {
+    }
+
     private readonly courseApiUrl = 'https://my.ukma.edu.ua/course/';
 
     public async getParsedCourse(code: number): Promise<Course> {
@@ -51,8 +56,8 @@ export class CourseService {
     public async getCourseWithStats(code: number) {
         const course = await this.getCourse(code);
 
-        const rating = await new CourseFeedbackService().getAverageRating(code);
-        const ratingCount = await new CourseFeedbackService().getRatingCount(code);
+        const rating = await this.courseFeedbackService.getAverageRating(code);
+        const ratingCount = await this.courseFeedbackService.getRatingCount(code);
 
         return {...course, rating, ratingCount};
     }
