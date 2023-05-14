@@ -21,9 +21,7 @@ export class CourseService {
     public async getParsedCourse(code: number): Promise<Course> {
         const response = await axios({
             baseURL: this.courseApiUrl,
-            params: {
-                code
-            }
+            url: `${code}`
         });
 
         const htmlParser = new HtmlParser(response.data);
