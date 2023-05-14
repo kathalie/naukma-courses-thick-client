@@ -5,9 +5,9 @@ import {ICourse} from "./types";
 import {HtmlParser, Schema} from "../../utils/html_parser";
 import {CourseSelectors} from "./course.selectors";
 import {Course} from "../../models/entities/Course.entity";
-import {CourseFeedbackService} from "../course_feedback/course_feedback.service";
 import {plainToClass} from "class-transformer";
 import {CheerioNormalizers, toNumber} from "../../utils/cheerio/cheerio_normalizers";
+import {CourseFeedback} from "../../models/entities/CourseFeedback.entity";
 
 @Injectable()
 export class CourseService {
@@ -49,9 +49,18 @@ export class CourseService {
     public async getCourseWithStats(code: number) {
         const course = await this.getCourse(code);
 
-        const rating = await new CourseFeedbackService().getAverageRating(code);
-        const ratingCount = await new CourseFeedbackService().getRatingCount(code);
+        // const data = await Course.createQueryBuilder('c')
+        //     .leftJoin(CourseFeedback, 'cf', 'c.code=cf.courseCode')
+        //     .select(['c.code', 'ROUND(AVG(cf.rating), 2) AS rating', 'COUNT(cf.rating) AS ratingCount'])
+        //     .groupBy('c.code')
+        //     .where('c.code=:code', {code})
+        //     .getRawOne();
 
-        return {...course, rating, ratingCount};
+        const data = await CourseFeedback.createQueryBuilder('cf')
+            .select(['ROUND(AVG(cf.rating), 2) AS rating', 'COUNT(1) AS ratingCount'])
+            .where('cf.courseCode=:code', {code})
+            .getRawOne();
+
+        return {...course, rating: data.rating, ratingCount: data.ratingCount};
     }
 }

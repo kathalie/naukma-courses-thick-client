@@ -5,11 +5,13 @@ import {CourseService} from "../course/course.service";
 
 @Injectable()
 export class CourseFeedbackService {
+    constructor(private courseService: CourseService) {
+    }
 
     public async create(code: number, feedbackDto: CreateFeedbackDto): Promise<CourseFeedback> {
         let courseFeedback = new CourseFeedback();
 
-        courseFeedback.course = await new CourseService().getCourse(code);
+        courseFeedback.course = await this.courseService.getCourse(code);
         courseFeedback.rating = feedbackDto.rating;
         courseFeedback.text = feedbackDto.text;
 
