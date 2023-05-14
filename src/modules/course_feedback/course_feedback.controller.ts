@@ -3,7 +3,7 @@ import {
     Controller,
     DefaultValuePipe,
     Get,
-    HttpStatus,
+    HttpStatus, InternalServerErrorException,
     Param,
     ParseIntPipe,
     Post,
@@ -27,6 +27,8 @@ export class CourseFeedbackController {
         } catch (err) {
             if ((err as AxiosError).response?.status === HttpStatus.NOT_FOUND) throw new CourseNotFoundException();
             if ((err as AxiosError).response?.status !== HttpStatus.OK) throw new DisconnectedException();
+
+            throw new InternalServerErrorException('Unknown error');
         }
     }
 
@@ -35,7 +37,7 @@ export class CourseFeedbackController {
         @Param('code', new ParseIntPipe(badCodeOptions)) code: number,
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
         @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
-    ): Promise<AllFeedbacks | undefined> {
+    ): Promise<AllFeedbacks> {
         try {
             const items = await this.service.getAllFeedbacks(code);
             const averageRating = await this.service.getAverageRating(code);
@@ -49,6 +51,8 @@ export class CourseFeedbackController {
         } catch (err) {
             if ((err as AxiosError).response?.status === HttpStatus.NOT_FOUND) throw new CourseNotFoundException();
             if ((err as AxiosError).response?.status !== HttpStatus.OK) throw new DisconnectedException();
+
+            throw new InternalServerErrorException('Unknown error');
         }
     }
 }

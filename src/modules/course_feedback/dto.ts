@@ -1,11 +1,12 @@
-import {IsIn} from "class-validator";
+import {IsAlpha, IsInt, IsOptional, IsString, Max, Min} from "class-validator";
 
 export class CreateFeedbackDto {
-    @IsIn(Array.from(
-        {length: 10},
-        (_, index) => index + 1
-    ))
+    @IsInt()
+    @Min(0)
+    @Max(10)
     rating: number;
 
+    @IsOptional()
+    @IsString()
     text?: string;
 }
