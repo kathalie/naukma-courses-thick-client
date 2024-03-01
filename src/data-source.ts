@@ -11,5 +11,6 @@ export const AppDataSource = new DataSource({
     entities: ['dist/**/*.entity.js'],
     charset: 'utf8mb4',
     migrations: ['dist/migration/**/*.js'],
-    logging: true
+    logging: true,
+    synchronize: true
 });

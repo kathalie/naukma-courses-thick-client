@@ -1,27 +1,28 @@
 import {
     Body,
     Controller,
-    DefaultValuePipe,
+    DefaultValuePipe, Delete,
     Get,
     HttpStatus, InternalServerErrorException,
     Param,
     ParseIntPipe,
-    Post,
+    Post, Put,
     Query
 } from "@nestjs/common";
 import {CourseFeedbackService} from "./course_feedback.service";
 import {badCodeOptions, CourseNotFoundException, DisconnectedException} from "../../common/exceptions";
-import {CreateFeedbackDto} from "./dto";
+import {CreateFeedbackDto, UpdateFeedbackDto} from "./dto";
 import {AxiosError} from "axios";
 import {AllFeedbacks} from "./types";
 
-@Controller('course')
+@Controller()
 export class CourseFeedbackController {
     constructor(protected readonly service: CourseFeedbackService) {
     }
 
-    @Post(':code/review')
-    public async create(@Param('code', new ParseIntPipe(badCodeOptions)) code: number, @Body() createFeedbackDto: CreateFeedbackDto) {
+    @Post('course/:code/review')
+    public async create(
+        @Param('code', new ParseIntPipe(badCodeOptions)) code: number, @Body() createFeedbackDto: CreateFeedbackDto) {
         try {
             return await this.service.create(code, createFeedbackDto);
         } catch (err) {
@@ -32,7 +33,43 @@ export class CourseFeedbackController {
         }
     }
 
-    @Get(':code/reviews')
+    @Put('/review/:feedbackId')
+    public async update(@Param('feedbackId', new ParseIntPipe(badCodeOptions)) id: number, @Body() updateFeedbackDto: UpdateFeedbackDto) {
+        try {
+            return await this.service.update(id, updateFeedbackDto);
+        } catch (err) {
+            if ((err as AxiosError).response?.status === HttpStatus.NOT_FOUND) throw new CourseNotFoundException();
+            if ((err as AxiosError).response?.status !== HttpStatus.OK) throw new DisconnectedException();
+
+            throw new InternalServerErrorException('Unknown error');
+        }
+    }
+
+    @Delete('/review/:feedbackId')
+    public async delete(@Param('feedbackId', new ParseIntPipe(badCodeOptions)) code: number) {
+        try {
+            return await this.service.delete(code);
+        } catch (err) {
+            if ((err as AxiosError).response?.status === HttpStatus.NOT_FOUND) throw new CourseNotFoundException();
+            if ((err as AxiosError).response?.status !== HttpStatus.OK) throw new DisconnectedException();
+
+            throw new InternalServerErrorException('Unknown error');
+        }
+    }
+
+    @Get('/review/:feedbackId')
+    public async getOne(@Param('feedbackId', new ParseIntPipe(badCodeOptions)) code: number) {
+        try {
+            return await this.service.getOne(code);
+        } catch (err) {
+            if ((err as AxiosError).response?.status === HttpStatus.NOT_FOUND) throw new CourseNotFoundException();
+            if ((err as AxiosError).response?.status !== HttpStatus.OK) throw new DisconnectedException();
+
+            throw new InternalServerErrorException('Unknown error');
+        }
+    }
+
+    @Get('course/:code/reviews')
     public async getAll(
         @Param('code', new ParseIntPipe(badCodeOptions)) code: number,
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
