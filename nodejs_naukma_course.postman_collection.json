@@ -1,0 +1,174 @@
+{
+	"info": {
+		"_postman_id": "f6ae8870-d50d-4ea7-bf58-3989be281036",
+		"name": "nodejs_naukma_course",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27188811"
+	},
+	"item": [
+		{
+			"name": "task02",
+			"item": [
+				{
+					"name": "course/:code",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:56202/course/284166",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "56202",
+							"path": [
+								"course",
+								"284166"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "schedule/:year/:season",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:56202/schedule/2019/autumn",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "56202",
+							"path": [
+								"schedule",
+								"2019",
+								"autumn"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "task03",
+			"item": [
+				{
+					"name": "course/:code/review",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rating\": 5,\r\n    \"text\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:56202/course/284166/review",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "56202",
+							"path": [
+								"course",
+								"284166",
+								"review"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "course/:code/reviews",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:56202/course/284166/reviews",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "56202",
+							"path": [
+								"course",
+								"284166",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Additional",
+			"item": [
+				{
+					"name": "review/:feedbackId",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "review/:feedbackId",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rating\": 1,\n    \"text\": \"Terrible course!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:56202/review/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "56202",
+							"path": [
+								"review",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "review/:feedbackId",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:56202/review/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "56202",
+							"path": [
+								"review",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
