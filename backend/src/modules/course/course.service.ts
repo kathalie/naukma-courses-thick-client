@@ -8,6 +8,9 @@ import {Course} from "../../models/entities/Course.entity";
 import {CourseFeedbackService} from "../course_feedback/course_feedback.service";
 import {plainToClass} from "class-transformer";
 import {CheerioNormalizers, toNumber} from "../../utils/cheerio/cheerio_normalizers";
+import {PageDto} from "../../common/dtos/page.dto";
+import {PageOptionsDto} from "../../common/dtos/page_options.dto";
+import {PageMetaDto} from "../../common/dtos/page_meta.dto";
 
 @Injectable()
 export class CourseService {
@@ -53,5 +56,24 @@ export class CourseService {
         const ratingCount = await new CourseFeedbackService().getRatingCount(code);
 
         return {...course, rating, ratingCount};
+    }
+
+    public async getAllCourses(pageOptionsDto: PageOptionsDto): Promise<PageDto<Course>> {
+        const queryBuilder = Course.createQueryBuilder('course');
+
+        //console.log(pageOptionsDto) //TODO undefined???
+
+        queryBuilder
+            .orderBy("course.name", pageOptionsDto.order)
+            //.skip(pageOptionsDto.skip) //TODO why is it not working???
+            .skip((pageOptionsDto.page! - 1) * pageOptionsDto.take!)
+            .take(pageOptionsDto.take);
+
+        const itemCount = await queryBuilder.getCount();
+        const { entities } = await queryBuilder.getRawAndEntities();
+
+        const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+
+        return new PageDto(entities, pageMetaDto);
     }
 }
