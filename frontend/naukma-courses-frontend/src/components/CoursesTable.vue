@@ -22,7 +22,7 @@
     <!-- Pagination -->
     <nav>
       <ul class="pagination">
-        <li class="page-item" :class="{ disabled: paginationMetadata.page === 1 }">
+        <li class="page-item" :class="{ disabled: currentPage === 1 }">
           <a class="page-link" href="#" aria-label="Previous" @click.prevent="prevPage">
             <span aria-hidden="true">&laquo;</span>
           </a>
@@ -30,10 +30,10 @@
         <li class="page-item"
             v-for="page in paginationMetadata.pageCount"
             :key="page"
-            :class="{ active: page === paginationMetadata.page }">
+            :class="{ active: page === currentPage }">
           <a class="page-link" href="#" @click.prevent="changePage(page)">{{ page }}</a>
         </li>
-        <li class="page-item" :class="{ disabled: paginationMetadata.page === paginationMetadata.pageCount }">
+        <li class="page-item" :class="{ disabled: currentPage === paginationMetadata.pageCount }">
           <a class="page-link" href="#" aria-label="Next" @click.prevent="nextPage">
             <span aria-hidden="true">&raquo;</span>
           </a>
@@ -85,74 +85,8 @@ function nextPage () {
 }
 
 function changePage (page: number) {
-  currentPage.value = page;
+  if (currentPage.value !== page) {
+    currentPage.value = page;
+  }
 }
 </script>
-
-<!--<script lang="ts">-->
-<!--import { defineComponent, PropType, ref, watch } from 'vue';-->
-<!--import type { Course } from "@/models/course";-->
-<!--import type { PaginationMetadata } from "@/models/pagination-metadata";-->
-<!--import { fetchCourses } from "@/scripts/fetch";-->
-
-<!--export default defineComponent({-->
-<!--  props: {-->
-<!--    courses: {-->
-<!--      type: Array as PropType<Course[]>,-->
-<!--      required: true-->
-<!--    },-->
-<!--    paginationMetadata: {-->
-<!--      type: Object as PropType<PaginationMetadata>,-->
-<!--      required: true-->
-<!--    }-->
-<!--  },-->
-<!--  setup(props, { emit }) {-->
-
-
-<!--    const currentPage = ref(props.paginationMetadata.page);-->
-
-<!--    watch(currentPage, (newValue) => {-->
-<!--      fetchCoursesForPage(newValue);-->
-<!--    });-->
-
-<!--    const pageSize = props.paginationMetadata.itemCount;-->
-
-<!--    const fetchCoursesForPage = (page: number) => {-->
-<!--      fetchCourses({-->
-<!--        take: 5,-->
-<!--        page-->
-<!--      })-->
-<!--          .catch(err => {-->
-<!--            console.log(err);-->
-<!--            alert("Failed to fetch courses!");-->
-<!--          })-->
-<!--          .then(paginatedCourses => {-->
-<!--            emit('page-changed', paginatedCourses!.data);-->
-<!--          });-->
-<!--    };-->
-
-<!--    const prevPage = () => {-->
-<!--      if (currentPage.value > 1) {-->
-<!--        currentPage.value&#45;&#45;;-->
-<!--      }-->
-<!--    };-->
-
-<!--    const nextPage = () => {-->
-<!--      if (currentPage.value < props.paginationMetadata.pageCount) {-->
-<!--        currentPage.value++;-->
-<!--      }-->
-<!--    };-->
-
-<!--    const changePage = (page: number) => {-->
-<!--      currentPage.value = page;-->
-<!--    };-->
-
-<!--    return { currentPage, pageSize, prevPage, nextPage, changePage };-->
-<!--  }-->
-<!--});-->
-<!--</script>-->
-
-
-<style>
-/* Add your custom styles here */
-</style>
