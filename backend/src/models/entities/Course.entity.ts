@@ -25,7 +25,7 @@ export class Course extends BaseEntity {
     @Column({type: 'tinyint'})
     public year: 1 | 2 | 3 | 4;
 
-    @Column({type: 'set', enum: CourseSeason,})
+    @Column({type: 'set', enum: CourseSeason})
     public seasons: CourseSeason[];
 
     @Column({name: 'credits_amount'})

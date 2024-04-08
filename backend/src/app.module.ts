@@ -8,6 +8,8 @@ import {AppDataSource} from "./data-source";
 import {CourseFeedbackModule} from "./modules/course_feedback/course_feedback.module";
 import {UserModule} from "./modules/user/user.module";
 import {AuthModule} from "./modules/auth/auth.module";
+import {APP_GUARD} from "@nestjs/core";
+import {RolesGuard} from "./common/roles/roles.guard";
 
 @Module({
     imports: [
@@ -20,7 +22,12 @@ import {AuthModule} from "./modules/auth/auth.module";
         UserModule,
     ],
     controllers: [],
-    providers: [],
+    providers: [
+        {
+            provide: APP_GUARD,
+            useClass: RolesGuard,
+        },
+    ],
 })
 export class AppModule {
 }
