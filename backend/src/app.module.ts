@@ -6,6 +6,7 @@ import {ScheduleModule} from './modules/schedule/schedule.module';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {AppDataSource} from "./data-source";
 import {CourseFeedbackModule} from "./modules/course_feedback/course_feedback.module";
+import { UsersModule } from './users/users.module';
 
 @Module({
     imports: [
@@ -13,6 +14,7 @@ import {CourseFeedbackModule} from "./modules/course_feedback/course_feedback.mo
         ScheduleModule,
         CourseFeedbackModule,
         TypeOrmModule.forRoot(AppDataSource.options),
+        UsersModule,
     ],
     controllers: [],
     providers: [],
