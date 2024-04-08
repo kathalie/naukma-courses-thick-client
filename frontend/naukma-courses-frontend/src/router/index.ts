@@ -1,23 +1,42 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import MainView from "@/views/MainView.vue";
+import { createRouter, createWebHistory } from 'vue-router';
+import CoursesView from "@/views/CoursesView.vue";
+import CourseDetailsView from "@/views/CourseDetailsView.vue";
+import {RouteNames} from "@/common/constants";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+      // TODO redirect
+    // {
+    //   path: '/',
+    //   name: RouteNames.home,
+    //   component: CoursesView,
+    //   meta: {
+    //     breadcrumb: 'Courses'
+    //   }
+    // },
     {
-      path: '/',
-      name: 'home',
-      component: MainView
+      path: "/courses",
+      meta: {
+        breadcrumb: "Курси"
+      },
+      children: [
+        {
+          path: "",
+          name: RouteNames.courses,
+          component: CoursesView,
+        },
+        {
+          path: ":code",
+          name: RouteNames.courseDetails,
+          component: CourseDetailsView,
+          meta: {
+            breadcrumb: "Деталі курсу"
+          }
+        },
+      ]
     },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }
   ]
-})
+});
 
-export default router
+export default router;

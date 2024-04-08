@@ -1,45 +1,64 @@
 <template>
-  <div class="container mt-5">
-    <table class="table">
-      <thead>
-      <tr>
-        <th>Code</th>
-        <th>Name</th>
-        <th>Faculty</th>
-        <th>Year</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="course in courses" :key="course.code">
-        <td>{{ course.code }}</td>
-        <td>{{ course.name }}</td>
-        <td>{{ course.facultyName }}</td>
-        <td>{{ course.year }}</td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="courses">
+    <Breadcrumbs/>
+      <div class="container mt-5">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <table class="table">
+              <thead>
+              <tr>
+                <th>Код</th>
+                <th>Назва</th>
+                <th>Факультет</th>
+                <th>Рік</th>
+              </tr>
+              </thead>
+              <tbody v-if="loading" class="loading">Завантаження...</tbody>
 
-    <!-- Pagination -->
-    <nav>
-      <ul class="pagination">
-        <li class="page-item" :class="{ disabled: currentPage === 1 }">
-          <a class="page-link" href="#" aria-label="Previous" @click.prevent="prevPage">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li class="page-item"
-            v-for="page in paginationMetadata.pageCount"
-            :key="page"
-            :class="{ active: page === currentPage }">
-          <a class="page-link" href="#" @click.prevent="changePage(page)">{{ page }}</a>
-        </li>
-        <li class="page-item" :class="{ disabled: currentPage === paginationMetadata.pageCount }">
-          <a class="page-link" href="#" aria-label="Next" @click.prevent="nextPage">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
+              <tbody v-else-if="error" class="error">Не вдалося завантажити курси.</tbody>
+
+              <tbody v-else-if="courses.length === 0">Курси не знайдено.</tbody>
+
+              <tbody v-else class="content">
+              <tr v-for="course in courses"
+                  :key="course.code">
+                <td>{{ course.code }}</td>
+                <td>{{ course.name }}</td>
+                <td>{{ course.facultyName }}</td>
+                <td>{{ course.year }}</td>
+                <td>
+                  <router-link :to="{ name: RouteNames.courseDetails, params: { code: course.code } }">
+                    Детальніше...
+                  </router-link>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <nav>
+              <ul class="pagination">
+                <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                  <a class="page-link" href="#" aria-label="Previous" @click.prevent="prevPage">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                <li class="page-item"
+                    v-for="page in paginationMetadata.pageCount"
+                    :key="page"
+                    :class="{ active: page === currentPage }">
+                  <a class="page-link" href="#" @click.prevent="changePage(page)">{{ page }}</a>
+                </li>
+                <li class="page-item" :class="{ disabled: currentPage === paginationMetadata.pageCount }">
+                  <a class="page-link" href="#" aria-label="Next" @click.prevent="nextPage">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -48,9 +67,12 @@
 import { ref, watch } from 'vue';
 import type { Course } from "@/models/course";
 import type { PaginationMetadata } from "@/models/pagination-metadata";
-import {fetchCourses} from "@/scripts/fetch";
+import {getCourses} from "@/scripts/fetch";
+import {RouteNames} from "@/common/constants";
+import Breadcrumbs from "@/components/Breadcrumbs.vue";
 
 const loading = ref(false);
+const error = ref(false);
 const courses = ref([] as Course[]);
 const paginationMetadata = ref({} as PaginationMetadata);
 const currentPage = ref(1);
@@ -61,12 +83,13 @@ async function fetchCoursesForPage(page: number) {
   loading.value = true;
 
   try {
-    const paginatedCourses = await fetchCourses({take: 4, page});
+    const paginatedCourses = await getCourses({take: 4, page});
 
     courses.value = paginatedCourses.data;
     paginationMetadata.value = paginatedCourses.meta;
   } catch (err) {
-    alert("Failed to fetch courses!");
+    console.log((err as Error).message);
+    error.value = true;
   } finally {
     loading.value = false;
   }
@@ -89,4 +112,5 @@ function changePage (page: number) {
     currentPage.value = page;
   }
 }
+
 </script>

@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import {CourseService} from './course.service';
 import {badCodeOptions, CourseNotFoundException, DisconnectedException} from "../../common/exceptions";
-import {AllFeedbacks} from "../course_feedback/types";
 import {AxiosError} from "axios";
 import {PageOptionsDto} from "../../common/dtos/page_options.dto";
 import {PageDto} from "../../common/dtos/page.dto";
@@ -22,7 +21,7 @@ export class CourseController {
     protected readonly service: CourseService,
   ) {}
 
-  @Get('course/:code')
+  @Get('courses/:code')
   public async getCourse(@Param('code', new ParseIntPipe(badCodeOptions)) code: number) {
     return this.service.getCourseWithStats(code).catch(err => {
       if (err.response?.status === HttpStatus.NOT_FOUND) throw new CourseNotFoundException();

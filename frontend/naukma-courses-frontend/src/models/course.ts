@@ -2,7 +2,7 @@ type Level = "Bachelor" | "Master";
 type Season = "Autumn" | "Spring" | "Summer";
 
 export type Course = {
-    "code": number,
+    "code": string,
     "name": string,
     "description": string,
     "facultyName": string,
