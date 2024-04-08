@@ -1,11 +1,12 @@
 import {
+  Body,
   Controller,
-  DefaultValuePipe,
+  Delete,
   Get,
   HttpStatus,
   InternalServerErrorException,
   Param,
-  ParseIntPipe,
+  ParseIntPipe, Post,
   Query
 } from '@nestjs/common';
 import {CourseService} from './course.service';
@@ -15,13 +16,13 @@ import {PageOptionsDto} from "../../common/dtos/page_options.dto";
 import {PageDto} from "../../common/dtos/page.dto";
 import {Course} from "../../models/entities/Course.entity";
 
-@Controller('')
+@Controller('courses')
 export class CourseController {
   constructor(
     protected readonly service: CourseService,
   ) {}
 
-  @Get('courses/:code')
+  @Get(':code')
   public async getCourse(@Param('code', new ParseIntPipe(badCodeOptions)) code: number) {
     return this.service.getCourseWithStats(code).catch(err => {
       if (err.response?.status === HttpStatus.NOT_FOUND) throw new CourseNotFoundException();
@@ -31,12 +32,36 @@ export class CourseController {
     });
   }
 
-  @Get('courses')
+  @Get('')
   public async getAll(
       @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<Course>> {
     try {
       return this.service.getAllCourses(pageOptionsDto);
+    } catch (err) {
+      if ((err as AxiosError).response?.status === HttpStatus.NOT_FOUND) throw new CourseNotFoundException();
+      if ((err as AxiosError).response?.status !== HttpStatus.OK) throw new DisconnectedException();
+
+      throw new InternalServerErrorException('Unknown error');
+    }
+  }
+
+  @Post('')
+  public async add(@Body() addCourseDto: {code: number}) {
+    try {
+      return await this.service.addCourse(addCourseDto.code);
+    } catch (err) {
+      if ((err as AxiosError).response?.status === HttpStatus.NOT_FOUND) throw new CourseNotFoundException();
+      if ((err as AxiosError).response?.status !== HttpStatus.OK) throw new DisconnectedException();
+
+      throw new InternalServerErrorException('Unknown error');
+    }
+  }
+
+  @Delete(':code')
+  public async delete(@Param('code', new ParseIntPipe(badCodeOptions)) code: number) {
+    try {
+      return await this.service.deleteCourse(code);
     } catch (err) {
       if ((err as AxiosError).response?.status === HttpStatus.NOT_FOUND) throw new CourseNotFoundException();
       if ((err as AxiosError).response?.status !== HttpStatus.OK) throw new DisconnectedException();

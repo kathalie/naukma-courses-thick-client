@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import axios from "axios";
 
 import {ICourse} from "./types";
@@ -47,6 +47,20 @@ export class CourseService {
         const cachedCourse = await Course.findOneBy({code});
 
         return cachedCourse ?? await this.getParsedCourse(code);
+    }
+
+    public async addCourse(code: number) {
+        return await this.getParsedCourse(code);
+    }
+
+    public async deleteCourse(code: number) {
+        const courseToRemove = await Course.findOneBy({code});
+
+        if (!courseToRemove) {
+            throw new NotFoundException('Course not found');
+        }
+
+        return await Course.remove(courseToRemove);
     }
 
     public async getCourseWithStats(code: number) {

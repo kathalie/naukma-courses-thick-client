@@ -14,3 +14,8 @@ export enum CourseSeason {
 export type Year = 1 | 2 | 3 | 4;
 
 export type CheerioNode = cheerio.Cheerio<cheerio.AnyNode>;
+
+export enum UserRole {
+  ADMIN = "admin",
+  USER = "user",
+}
