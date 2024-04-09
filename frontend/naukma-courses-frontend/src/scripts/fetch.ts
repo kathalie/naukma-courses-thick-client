@@ -22,11 +22,29 @@ export async function getCourse(code: string): Promise<Course> {
 }
 
 export async function deleteCourse(code: string) {
-    await instance.delete(`courses/${code}`);
+    const token = localStorage.getItem("token");
+
+    await instance.delete(`courses/${code}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+}
+
+export async function addCourse(code: string) {
+    const token = localStorage.getItem("token");
+
+    await instance.post(`courses`, {
+        code: +code
+    },{
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
 }
 
 export async function loginAdmin(email: string, password: string): Promise<{ data: {
-    access_token: string
+    accessToken: string
 }}> {
     return await instance.post(`auth/login`, {
         email,

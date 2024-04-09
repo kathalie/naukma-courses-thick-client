@@ -57,14 +57,16 @@
             </tbody>
           </table>
           <Pagination @updateCurrentPage="handleUpdateCurrentPage" :pagination-metadata="paginationMetadata" />
-          <button class="btn btn-dark">Створити новий курс</button>
-          <button class="btn accent-button" @click="showAddExistingCourseModal">Додати існуючий курс</button>
-          <Modal v-model="isShownAddExistingCourse" :close="closeAddExistingCourseModal">
-            <div class="modal">
-              <p>Hello</p>
-              <button @click="closeAddExistingCourseModal">close</button>
-            </div>
-          </Modal>
+<!--          <button class="btn btn-dark">Створити новий курс</button>-->
+          <input type="text" v-model="courseCode">
+          <button class="btn accent-button" @click="addExistingCourse">Додати існуючий курс</button>
+<!--          <button class="btn accent-button" @click="showAddExistingCourseModal">Додати існуючий курс</button>-->
+<!--          <Modal v-model="isShownAddExistingCourse" :close="closeAddExistingCourseModal">-->
+<!--            <div class="modal">-->
+<!--              <p>Hello</p>-->
+<!--              <button @click="closeAddExistingCourseModal">close</button>-->
+<!--            </div>-->
+<!--          </Modal>-->
         </div>
       </div>
     </div>
@@ -92,7 +94,7 @@
 import { ref, watch } from 'vue';
 import type { Course } from "@/models/course";
 import type { PaginationMetadata } from "@/models/pagination-metadata";
-import {deleteCourse, getCourses} from "@/scripts/fetch";
+import {addCourse, deleteCourse, getCourses} from "@/scripts/fetch";
 import Pagination from "@/components/Pagination.vue";
 
 const loading = ref(false);
@@ -101,6 +103,7 @@ const courses = ref([] as Course[]);
 const paginationMetadata = ref({} as PaginationMetadata);
 const currentPage = ref(1);
 const isShownAddExistingCourse = ref(false);
+const courseCode = ref('');
 
 watch(currentPage, async () => await fetchCoursesForPage(currentPage.value), { immediate: true });
 
@@ -132,18 +135,40 @@ function showAddExistingCourseModal() {
   isShownAddExistingCourse.value = true;
 }
 
-async function fetchDeleteCourse(code: string) {
+async function addExistingCourse() {
+  console.log(courseCode.value)
+  addCourse(courseCode.value)
+      .then(async () => {
+        alert("Successfully added course!");
+
+        await fetchCoursesForPage(1);
+
+        courseCode.value = ""
+      })
+      .catch(err => {
+        switch (err.response.data.statusCode) {
+          case 401: alert("Ви не авторизовані!"); break;
+          case 403: alert("У Вас немає доступу до ресурсу!"); break;
+          case 404: alert("Курс з таким кодом не знайдено!"); break;
+          default: alert("Сталась непередбачувана помилка");
+        }
+      });
+}
+
+function fetchDeleteCourse(code: string) {
   const confirmed = confirm("Ви впевнені, що хочете видалити цей курс?");
 
   if (!confirmed) return;
 
-  await deleteCourse(code)
-      .then(() => {
+  deleteCourse(code)
+      .then(async () => {
         alert("Successfully deleted course!");
-        currentPage.value = 1;
+
+        await fetchCoursesForPage(1);
       })
       .catch(err => {
         switch (err.response.data.statusCode) {
+          case 401: alert("Ви не авторизовані!"); break;
           case 403: alert("У Вас немає доступу до ресурсу!"); break;
           case 404: alert("Курс не знайдено"); break;
           default: alert("Сталась непередбачувана помилка");

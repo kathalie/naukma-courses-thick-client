@@ -7,7 +7,7 @@ import {
   InternalServerErrorException,
   Param,
   ParseIntPipe, Post,
-  Query
+  Query, UseGuards
 } from '@nestjs/common';
 import {CourseService} from './course.service';
 import {badCodeOptions, CourseNotFoundException, DisconnectedException} from "../../common/exceptions";
@@ -17,6 +17,7 @@ import {PageDto} from "../../common/dtos/page.dto";
 import {Course} from "../../models/entities/Course.entity";
 import {Roles} from "../../common/roles/roles.decorator";
 import {UserRole} from "../../common/types";
+import {AuthGuard} from "../auth/auth.guard";
 
 @Controller('courses')
 export class CourseController {
@@ -49,7 +50,8 @@ export class CourseController {
   }
 
   @Post()
-  @Roles(UserRole.ADMIN)
+  // @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard)
   public async add(@Body() addCourseDto: {code: number}) {
     try {
       return await this.service.addCourse(addCourseDto.code);
@@ -62,7 +64,8 @@ export class CourseController {
   }
 
   @Delete(':code')
-  @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard)
+  // @Roles(UserRole.ADMIN)
   public async delete(@Param('code', new ParseIntPipe(badCodeOptions)) code: number) {
     try {
       return await this.service.deleteCourse(code);

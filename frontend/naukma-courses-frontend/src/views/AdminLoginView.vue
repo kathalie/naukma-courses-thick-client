@@ -43,7 +43,7 @@ function login() {
   loginAdmin(username.value, password.value)
       .then(data => {
         console.log(data)
-        localStorage.setItem('token', data.data.access_token);
+        localStorage.setItem('token', data.data.accessToken);
         router.push({name: RouteNames.adminHome});
       })
       .catch(err => {
