@@ -1,15 +1,29 @@
 <template>
   <div class="courses-details">
     <UpperBar caption="Деталі курсу"/>
-
     <Breadcrumbs/>
+
     <div v-if="loading" class="loading">Loading...</div>
-
     <div v-else-if="error" class="error">Failed to load courses.</div>
-
     <div v-else class="content">
-      <h2>{{ course.name }}</h2>
-      <p>{{ course.facultyName }}</p>
+      <div class="row justify-content-center">
+        <div class="col-md-10">
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <tbody>
+              <tr v-for="(field, index) in fields(course)" :key="index">
+                <th scope="row" class="bg-dark text-light">{{ field.name }}</th>
+                <td>{{ field.value }}</td>
+              </tr>
+              <tr>
+                <th scope="row" class="bg-dark text-light">Курс</th>
+                <td>{{ course.year }}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -24,9 +38,24 @@ import UpperBar from "@/components/layout-components/UpperBar.vue";
 
 const route = useRoute();
 
-const loading = ref(false)
+const loading = ref(false);
 const course = ref({} as Course);
-const error = ref(false)
+const error = ref(false);
+
+function fields(course: Course) {
+  return[
+    {name: "Код", value: course.code},
+    {name: "Назва", value: course.name},
+    {name: "Факультет", value: course.facultyName},
+    {name: "Кафедра", value: course.departmentName},
+    {name: "Опис", value: course.description},
+    {name: "Викладач", value: course.teacherName},
+    {name: "Години", value: course.hoursAmount},
+    {name: "Кредити", value: course.creditsAmount},
+    {name: "Рівень", value: course.level},
+    {name: "Курс", value: course.year},
+  ];
+}
 
 watch(
     () => route.params.code,
