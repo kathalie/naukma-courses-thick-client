@@ -1,7 +1,7 @@
 <template>
   <nav>
-    <ul class="pagination">
-      <li class="page-item" :class="{ disabled: !paginationMetadata.hasPreviousPage }">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" :class="{ 'disabled': !paginationMetadata.hasPreviousPage }">
         <a class="page-link" href="#" aria-label="Previous" @click.prevent="prevPage">
           <span aria-hidden="true">&laquo;</span>
         </a>
@@ -9,10 +9,10 @@
       <li class="page-item"
           v-for="page in paginationMetadata.pageCount"
           :key="page"
-          :class="{ active: page === +paginationMetadata.page }">
+          :class="{ 'active': page === +paginationMetadata.page }">
         <a class="page-link" href="#" @click.prevent="changePage(page)">{{ page }}</a>
       </li>
-      <li class="page-item" :class="{ disabled: !paginationMetadata.hasNextPage }">
+      <li class="page-item" :class="{ 'disabled': !paginationMetadata.hasNextPage }">
         <a class="page-link" href="#" aria-label="Next" @click.prevent="nextPage">
           <span aria-hidden="true">&raquo;</span>
         </a>
@@ -20,7 +20,6 @@
     </ul>
   </nav>
 </template>
-
 
 <script setup lang="ts">
 import {defineEmits, defineProps} from 'vue';
@@ -58,3 +57,35 @@ function changePage (page: number) {
 }
 
 </script>
+
+<style scoped>
+.pagination {
+  margin-top: 20px;
+}
+
+.page-item {
+  cursor: pointer;
+}
+
+.page-link {
+  color: #FC0E6D;
+  background-color: transparent;
+  border: none;
+  transition: color 0.3s;
+}
+
+.page-link:hover {
+  color: #ff007f;
+}
+
+.page-item.disabled .page-link {
+  color: #6c757d;
+}
+
+.page-item.active .page-link {
+  z-index: 1;
+  color: #fff;
+  background-color: #FC0E6D;
+  border-color: #FC0E6D;
+}
+</style>

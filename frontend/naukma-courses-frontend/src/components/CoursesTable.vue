@@ -1,47 +1,74 @@
 <template>
   <div class="courses">
-    <Breadcrumbs/>
+    <Breadcrumbs />
     <div class="container mt-5">
       <div class="row justify-content-center">
-        <div class="col-md-6">
-          <table class="table">
-            <thead>
+        <div class="col-md-10">
+          <table class="table table-hover table-dark">
+            <thead class="thead-dark">
             <tr>
-              <th>Код</th>
-              <th>Назва</th>
-              <th>Факультет</th>
-              <th>Рік</th>
+              <th scope="col">Код</th>
+              <th scope="col">Назва</th>
+              <th scope="col">Факультет</th>
+              <th scope="col">Рік</th>
+              <th scope="col">Деталі</th>
             </tr>
             </thead>
-            <tbody v-if="loading" class="loading">Завантаження...</tbody>
-
-            <tbody v-else-if="error" class="error">Не вдалося завантажити курси.</tbody>
-
-            <tbody v-else-if="courses.length === 0">Курси не знайдено.</tbody>
-
-            <tbody v-else class="content">
-            <tr v-for="course in courses"
-                :key="course.code">
-              <td>{{ course.code }}</td>
-              <td>{{ course.name }}</td>
-              <td>{{ course.facultyName }}</td>
-              <td>{{ course.year }}</td>
-              <td>
-                <router-link :to="{ name: RouteNames.courseDetails, params: { code: course.code } }">
-                  Детальніше...
-                </router-link>
-              </td>
-            </tr>
+            <tbody>
+            <template v-if="loading">
+              <tr>
+                <td colspan="5" class="loading">Завантаження...</td>
+              </tr>
+            </template>
+            <template v-else-if="error">
+              <tr>
+                <td colspan="5" class="error">Не вдалося завантажити курси.</td>
+              </tr>
+            </template>
+            <template v-else-if="courses.length === 0">
+              <tr>
+                <td colspan="5" class="no-data">Курси не знайдено.</td>
+              </tr>
+            </template>
+            <template v-else>
+              <tr v-for="course in courses" :key="course.code">
+                <td>{{ course.code }}</td>
+                <td>{{ course.name }}</td>
+                <td>{{ course.facultyName }}</td>
+                <td>{{ course.year }}</td>
+                <td>
+                  <router-link :to="{ name: RouteNames.courseDetails, params: { code: course.code } }" class="route-link">
+                    Детальніше...
+                  </router-link>
+                </td>
+              </tr>
+            </template>
             </tbody>
           </table>
-
-          <Pagination @updateCurrentPage="handleUpdateCurrentPage" :pagination-metadata="paginationMetadata"/>
+          <Pagination @updateCurrentPage="handleUpdateCurrentPage" :pagination-metadata="paginationMetadata" />
         </div>
       </div>
     </div>
   </div>
 </template>
 
+<style scoped>
+.table th,
+.table td {
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+.route-link {
+  color: #ef80ab;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.route-link:hover {
+  color: #f30e7d;
+}
+</style>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
@@ -64,7 +91,7 @@ async function fetchCoursesForPage(page: number) {
   loading.value = true;
 
   try {
-    const paginatedCourses = await getCourses({take: 4, page});
+    const paginatedCourses = await getCourses({take: 5, page});
 
     courses.value = paginatedCourses.data;
     paginationMetadata.value = paginatedCourses.meta;

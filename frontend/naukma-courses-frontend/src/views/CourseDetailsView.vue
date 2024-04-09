@@ -1,5 +1,7 @@
 <template>
   <div class="courses-details">
+    <UpperBar caption="Деталі курсу"/>
+
     <Breadcrumbs/>
     <div v-if="loading" class="loading">Loading...</div>
 
@@ -18,6 +20,7 @@ import { useRoute } from 'vue-router'
 import {getCourse} from "@/scripts/fetch.js";
 import type {Course} from "@/models/course";
 import Breadcrumbs from "@/components/Breadcrumbs.vue";
+import UpperBar from "@/components/layout-components/UpperBar.vue";
 
 const route = useRoute();
 

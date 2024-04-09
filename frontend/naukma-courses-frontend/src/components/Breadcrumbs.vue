@@ -1,13 +1,15 @@
 <template>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <router-link v-for="(breadcrumb, index) in breadcrumbs"
-                   :key="index"
-                   :to="breadcrumb.to"
-                   class="breadcrumb-item"
-                   :class="{ active: index === breadcrumbs.length - 1 }">
-        {{ breadcrumb.text }}
-      </router-link>
+      <li v-for="(breadcrumb, index) in breadcrumbs" :key="index" class="breadcrumb-item">
+        <router-link
+            :to="breadcrumb.to"
+            class="breadcrumb-link"
+            :class="{ 'active': index !== breadcrumbs.length - 1 }"
+        >
+          {{ breadcrumb.text }}
+        </router-link>
+      </li>
     </ol>
   </nav>
 </template>
@@ -45,41 +47,26 @@ const breadcrumbs = computed(() => {
   return generatedBreadcrumbs;
 })
 
-
 </script>
 
-<!--<template>-->
-<!--  <nav aria-label="breadcrumb">-->
-<!--    <ol class="breadcrumb">-->
-<!--      <li class="breadcrumb-item" v-for="(breadcrumb, index) in breadcrumbs" :key="index">-->
-<!--        <router-link :to="breadcrumb.to">{{ breadcrumb.label }}</router-link>-->
-<!--      </li>-->
-<!--    </ol>-->
-<!--  </nav>-->
-<!--</template>-->
+<style scoped>
+.breadcrumb {
+  background-color: #f8f9fa;
+  padding: 1.5rem 2rem;
+  border-radius: 0.25rem;
+}
 
-<!--<script setup>-->
-<!--import { computed, watch, onMounted } from 'vue';-->
-<!--import { useRoute } from 'vue-router';-->
+.breadcrumb-link {
+  color: #6c757d;
+  text-decoration: none;
+  transition: color 0.3s;
+}
 
-<!--const route = useRoute();-->
+.breadcrumb-link.active {
+  color: #FC0E6D;
 
-<!--const breadcrumbs = computed(() => {-->
-<!--  const matchedRoutes = route.matched;-->
-
-<!--  return matchedRoutes.map(route => ({-->
-<!--    label: route.meta.breadcrumb || route.name,-->
-<!--    to: route.path-->
-<!--  }));-->
-<!--});-->
-
-<!--onMounted(() => {-->
-<!--  watch(route, () => {-->
-<!--    updateBreadcrumbs();-->
-<!--  });-->
-<!--});-->
-
-<!--function updateBreadcrumbs() {-->
-<!--  // The breadcrumbs computed property will automatically update-->
-<!--}-->
-<!--</script>-->
+  &:hover {
+    color: #020001;
+  }
+}
+</style>
