@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {createRouter, createWebHistory} from 'vue-router';
 import CoursesView from "@/views/CoursesView.vue";
 import CourseDetailsView from "@/views/CourseDetailsView.vue";
 import {RouteNames} from "@/common/constants";
@@ -6,6 +6,7 @@ import AdminLoginView from "@/views/AdminLoginView.vue";
 import AdminHomeView from "@/views/AdminHomeView.vue";
 import AdminCourses from "@/components/admin/AdminCourses.vue";
 import AdminUsers from "@/components/admin/AdminUsers.vue";
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,7 +52,9 @@ const router = createRouter({
         {
           path: "home",
           component: AdminHomeView,
+          name: RouteNames.adminHome,
           redirect: {name: RouteNames.adminCourses},
+          beforeEnter: authenticateAdmin,
           children: [
             {
               path: "courses",
@@ -70,4 +73,17 @@ const router = createRouter({
   ]
 });
 
+function isAuthenticated(): boolean {
+  const token = localStorage.getItem('token');
+
+  return !!token;
+}
+
+function authenticateAdmin(to: any, from: any, next: any): void {
+  if (!isAuthenticated()) {
+    next({ name: RouteNames.adminLogin });
+  } else {
+    next();
+  }
+}
 export default router;

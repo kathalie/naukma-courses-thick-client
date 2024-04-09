@@ -1,14 +1,20 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 
-import App from './App.vue'
-import router from './router'
+import App from './App.vue';
+import router from './router';
 
-const app = createApp(App)
+import 'vue-universal-modal/dist/index.css';
+import VueUniversalModal from 'vue-universal-modal';
 
-app.use(createPinia())
-app.use(router)
+const app = createApp(App);
 
-app.mount('#app')
+app.use(createPinia());
+app.use(router);
+app.use(VueUniversalModal, {
+    teleportTarget: '#modals',
+});
+
+app.mount('#app');

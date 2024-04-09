@@ -83,7 +83,6 @@ function changePage (page: number) {
 }
 
 .page-item.active .page-link {
-  z-index: 1;
   color: #fff;
   background-color: #FC0E6D;
   border-color: #FC0E6D;

@@ -34,7 +34,6 @@ const activeTab = ref(props.menuItems[0]?.routeName);
   position: fixed;
   top: 50px;
   left: 0;
-  z-index: 1;
   overflow-y: auto;
   padding-top: 1rem;
   transition: all 0.3s;

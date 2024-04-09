@@ -17,11 +17,10 @@ export class AuthService {
             throw new NotFoundException("User was not found");
         }
 
-        const hashedPassword = await this.getHash(password);
-        const hashesMatch = await bcrypt.compare(user.hash, hashedPassword);
+        const hashesMatch = await bcrypt.compare(password, user.hash);
 
         if (!hashesMatch) {
-            throw new UnauthorizedException();
+            throw new NotFoundException();
         }
 
         const payload = { sub: user.id, username: user.email };

@@ -20,3 +20,16 @@ export async function getCourse(code: string): Promise<Course> {
 
     return response.data;
 }
+
+export async function deleteCourse(code: string) {
+    await instance.delete(`courses/${code}`);
+}
+
+export async function loginAdmin(email: string, password: string): Promise<{ data: {
+    access_token: string
+}}> {
+    return await instance.post(`auth/login`, {
+        email,
+        password
+    });
+}

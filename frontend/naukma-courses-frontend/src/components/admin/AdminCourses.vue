@@ -15,7 +15,7 @@
               <th scope="col">Рівень</th>
               <th scope="col">ECTS</th>
               <th scope="col">Години</th>
-              <th scope="col"></th>
+<!--              <th scope="col"></th>-->
               <th scope="col"></th>
             </tr>
             </thead>
@@ -46,17 +46,25 @@
                 <td>{{ course.level }}</td>
                 <td>{{ course.creditsAmount }}</td>
                 <td>{{ course.hoursAmount }}</td>
+<!--                <td>-->
+<!--                  <button class="btn btn-light btn-sm">Edit</button>-->
+<!--                </td>-->
                 <td>
-                  <button class="edit-btn btn btn-light btn-sm">Edit</button>
-                </td>
-                <td>
-                  <button class="delete-btn btn btn-sm">Delete</button>
+                  <button class="btn accent-button btn-sm" @click="async() => await fetchDeleteCourse(course.code)">Delete</button>
                 </td>
               </tr>
             </template>
             </tbody>
           </table>
           <Pagination @updateCurrentPage="handleUpdateCurrentPage" :pagination-metadata="paginationMetadata" />
+          <button class="btn btn-dark">Створити новий курс</button>
+          <button class="btn accent-button" @click="showAddExistingCourseModal">Додати існуючий курс</button>
+          <Modal v-model="isShownAddExistingCourse" :close="closeAddExistingCourseModal">
+            <div class="modal">
+              <p>Hello</p>
+              <button @click="closeAddExistingCourseModal">close</button>
+            </div>
+          </Modal>
         </div>
       </div>
     </div>
@@ -70,12 +78,12 @@
   vertical-align: top;
 }
 
-.delete-btn {
+.accent-button {
   background-color: #f30e7d;
   color: white;
 }
 
-.delete-btn:hover {
+.accent-button:hover {
   background-color: #93094b;
 }
 </style>
@@ -84,7 +92,7 @@
 import { ref, watch } from 'vue';
 import type { Course } from "@/models/course";
 import type { PaginationMetadata } from "@/models/pagination-metadata";
-import {getCourses} from "@/scripts/fetch";
+import {deleteCourse, getCourses} from "@/scripts/fetch";
 import Pagination from "@/components/Pagination.vue";
 
 const loading = ref(false);
@@ -92,6 +100,7 @@ const error = ref(false);
 const courses = ref([] as Course[]);
 const paginationMetadata = ref({} as PaginationMetadata);
 const currentPage = ref(1);
+const isShownAddExistingCourse = ref(false);
 
 watch(currentPage, async () => await fetchCoursesForPage(currentPage.value), { immediate: true });
 
@@ -114,4 +123,42 @@ async function fetchCoursesForPage(page: number) {
 function handleUpdateCurrentPage(page: number) {
   currentPage.value = page;
 }
+
+function closeAddExistingCourseModal() {
+  isShownAddExistingCourse.value = false;
+}
+
+function showAddExistingCourseModal() {
+  isShownAddExistingCourse.value = true;
+}
+
+async function fetchDeleteCourse(code: string) {
+  const confirmed = confirm("Ви впевнені, що хочете видалити цей курс?");
+
+  if (!confirmed) return;
+
+  await deleteCourse(code)
+      .then(() => {
+        alert("Successfully deleted course!");
+        currentPage.value = 1;
+      })
+      .catch(err => {
+        switch (err.response.data.statusCode) {
+          case 403: alert("У Вас немає доступу до ресурсу!"); break;
+          case 404: alert("Курс не знайдено"); break;
+          default: alert("Сталась непередбачувана помилка");
+        }
+      });
+}
 </script>
+
+<!--<style scoped >-->
+<!--.modal {-->
+<!--  width: 300px;-->
+<!--  padding: 30px;-->
+<!--  box-sizing: border-box;-->
+<!--  background-color: #fff;-->
+<!--  font-size: 20px;-->
+<!--  text-align: center;-->
+<!--}-->
+<!--</style>-->

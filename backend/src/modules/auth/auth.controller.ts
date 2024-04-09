@@ -13,7 +13,7 @@ import {AuthService} from "./auth.service";
 import {LoginDto} from "./dto";
 import {CreateUserDto} from "../user/dto";
 import {AxiosError} from "axios";
-import {CourseNotFoundException, DisconnectedException} from "../../common/exceptions";
+import {DisconnectedException} from "../../common/exceptions";
 
 @Controller('auth')
 export class AuthController {
@@ -26,7 +26,6 @@ export class AuthController {
             return this.authService.signIn(loginDto.email, loginDto.password);
         } catch (err) {
             if ((err as AxiosError).response?.status === HttpStatus.NOT_FOUND) throw new NotFoundException();
-            if ((err as AxiosError).response?.status === HttpStatus.UNAUTHORIZED) throw new UnauthorizedException();
             if ((err as AxiosError).response?.status !== HttpStatus.OK) throw new DisconnectedException();
 
             throw new InternalServerErrorException('Unknown error');
@@ -40,7 +39,6 @@ export class AuthController {
             return this.authService.signUp(createUserDto);
         } catch (err) {
             if ((err as AxiosError).response?.status === HttpStatus.CONFLICT) throw new ConflictException();
-            if ((err as AxiosError).response?.status === HttpStatus.UNAUTHORIZED) throw new UnauthorizedException();
             if ((err as AxiosError).response?.status !== HttpStatus.OK) throw new DisconnectedException();
 
             throw new InternalServerErrorException('Unknown error');

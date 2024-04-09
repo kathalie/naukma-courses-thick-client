@@ -4,6 +4,7 @@ export const RouteNames = {
     register: "register",
     courses: "courses",
     courseDetails: "courseDetails",
+    adminHome: "adminHome",
     adminCourses: "adminCourses",
     adminUsers: "adminUsers",
     adminLogin: "adminLogin",
