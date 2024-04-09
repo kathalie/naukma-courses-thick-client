@@ -87,6 +87,10 @@ const currentPage = ref(1);
 
 watch(currentPage, async () => await fetchCoursesForPage(currentPage.value), { immediate: true });
 
+setInterval(() => {
+  fetchCoursesForPage(currentPage.value);
+}, 1000 * 60);
+
 async function fetchCoursesForPage(page: number) {
   loading.value = true;
 

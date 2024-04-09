@@ -63,6 +63,10 @@ watch(
     { immediate: true }
 );
 
+setInterval(() => {
+  fetchCourse(route.params.code as string);
+}, 1000 * 60);
+
 async function fetchCourse(code: string) {
   error.value = false;
   loading.value = true;
