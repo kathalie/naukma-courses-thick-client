@@ -5,7 +5,12 @@ const User = require('../users/user.model');
 
 async function signIn(email, password) {
     try {
-        const user = await User.findOne({ where: { email } });
+        const user = await User.findOne({ 
+            where: { email },
+            attributes: { 
+                exclude: ['createdAt', 'updatedAt', 'deletedAt'] 
+            }
+        });
         if (!user) {
             throw { response: { status: 404 } };
         }
@@ -21,7 +26,13 @@ async function signIn(email, password) {
 
 async function signUp(userData) {
     try {
-        const user = await User.findOne({ where: { email: userData.email } });
+        const user = await User.findOne({ where: { 
+            email: userData.email,
+            attributes: { 
+                exclude: ['createdAt', 'updatedAt', 'deletedAt'] 
+            }
+            } 
+        });
         if (user) {
             throw { response: { status: 409 } };
         }
