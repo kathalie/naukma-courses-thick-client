@@ -1,4 +1,4 @@
-const { Course } = require('./course.model');
+const Course  = require('./course.model');
 
 async function getOneCourse(code) {
     const course = await Course.findOne({ where: { code } });
@@ -11,7 +11,10 @@ async function getOneCourse(code) {
 async function getAllCourses(pageOptionsDto) {
     return await Course.findAll({
         limit: pageOptionsDto.take,
-        offset: (pageOptionsDto.page - 1) * pageOptionsDto.take
+        offset: (pageOptionsDto.page - 1) * pageOptionsDto.take,
+        attributes: { 
+            exclude: ['createdAt', 'updatedAt', 'deletedAt'] 
+        }
     });
 }
 

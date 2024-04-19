@@ -9,7 +9,7 @@ function authenticateToken(req, res, next) {
     jwt.verify(token, jwtConstants.secret, (err, user) => {
         if (err) return res.status(403).send({ message: 'Invalid token' });
         req.user = user;
-        next();
+        next(); 
     });
 }
 

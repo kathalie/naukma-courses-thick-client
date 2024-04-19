@@ -33,12 +33,13 @@ const Course = sequelize.define('Course', {
     seasons: {
         type: DataTypes.STRING,
         allowNull: false,
-        get() {
-            return this.getDataValue('seasons').split(';'); // Assuming seasons are stored as a semicolon-separated string
-        },
-        set(val) {
-            this.setDataValue('seasons', val.join(';')); // Join array of seasons into a semicolon-separated string
-        },
+        // get() {
+        //     return this.getDataValue('seasons').split(';'); // Assuming seasons are stored as a semicolon-separated string
+        // },
+        // set(val) {
+        //     console.log(typeof val, val)
+        //     this.setDataValue('seasons', val.join(';')); // Join array of seasons into a semicolon-separated string
+        // },
     },
     creditsAmount: {
         type: DataTypes.INTEGER,

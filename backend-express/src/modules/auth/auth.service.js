@@ -18,7 +18,7 @@ async function signIn(email, password) {
         if (!isMatch) {
             throw { response: { status: 404 } };
         }
-        return jwt.sign({ email: user.email }, jwtConstants.secret);
+        return jwt.sign({ email: user.email, role: user.role }, jwtConstants.secret);
     } catch (error) {
         throw error;
     }
