@@ -1,4 +1,4 @@
-const Course  = require('./course.model');
+const {Course}  = require('../index');
 
 async function getOneCourse(code) {
     const course = await Course.findOne({ where: { code } });

@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const authRouter = require("./modules/auth/auth.routes");
 const { sequelize } = require("./data-access/sequelize");
 const coursesRouter = require("./modules/courses/course.routes");
+const feedbacksRouter = require('./modules/course_feedback/course_feedback.routes')
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(bodyParser.json());
 // Routes
 app.use('/auth', authRouter);
 app.use('/courses', coursesRouter);
+app.use('/feedbacks', feedbacksRouter)
 
 // Start the Express server
 const PORT = process.env.PORT || 3000;
