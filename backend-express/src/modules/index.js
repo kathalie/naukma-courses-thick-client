@@ -4,7 +4,7 @@ const CourseFeedback = require('./course_feedback/course_feedback.model')
 
 Course.hasMany(CourseFeedback)
 CourseFeedback.belongsTo(Course, {
-    foreignKey: 'CourseCode'
+    foreignKey: 'course_code'
 })
 
 module.exports = {

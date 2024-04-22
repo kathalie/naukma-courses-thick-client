@@ -21,7 +21,7 @@ async function getCourseFeedbacksAll() {
 }
 async function getCourseFeedbacks(courseId) {
     try {
-        const courseFeedbacks = await CourseFeedback.findAll({ where: { courseCode: courseId } });
+        const courseFeedbacks = await CourseFeedback.findAll({ where: { course_code: courseId } });
         return courseFeedbacks;
     } catch (error) {
         throw new Error('Could not fetch course feedbacks');
